@@ -2,7 +2,7 @@
 
 import com.sap.corydoras.Parser
 
-def call(String path, String destination) {
+def call(String path, String destination, commit) {
     arrFiles = []
     def parser = new Parser()
     if (!path) {
