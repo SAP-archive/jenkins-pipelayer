@@ -1,0 +1,63 @@
+#!groovy
+
+plugins {
+    id 'groovy'
+    id 'codenarc'
+}
+
+description='''
+Pipeline job generation made easy
+'''
+group 'com.sap.devops'
+version '1.0.0'
+
+codenarc {
+    configFile rootProject.file('codenarc.groovy')
+    toolVersion = '1.1'
+    reportFormat = 'console'
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs 'src/com'
+        }
+    }
+    test {
+        groovy {
+            srcDirs 'src/test'
+        }
+    }
+}
+
+repositories {
+    mavenLocal()
+    maven { url 'http://nexus.wdf.sap.corp:8081/nexus/content/groups/build.milestones/' }
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.13'
+    compile 'com.cloudbees:groovy-cps:1.24'
+    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+    testCompile 'junit:junit:4.12'
+}
+
+allprojects {
+    repositories {
+        maven { url 'http://nexus.wdf.sap.corp:8081/nexus/content/groups/build.milestones/' }
+        mavenCentral()
+        jcenter()
+    }
+}
+
+test {
+    systemProperty 'env', System.getProperty('env')
+}
+
+task wrapper(type: Wrapper) {
+   gradleVersion = '4.6'
+}
+
+// defaultTasks 'codeNarcMain'
