@@ -32,7 +32,7 @@ def call(String path, String destination) {
         ]
     }
 
-    def jobDefinition = libraryResource 'seed/jobs.groovy'
+    def jobDefinition = libraryResource 'com/sap/corydoras/seed/jobs.groovy'
     writeFile file: 'seed/jobs.groovy', text: jobDefinition
 
     jobDsl removedJobAction: 'DELETE',

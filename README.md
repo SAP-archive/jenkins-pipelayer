@@ -15,3 +15,8 @@ uses JobDSL to generate a pipeline with checkout from scm
 include the lib,
 use generateJobs or processTemplates
 
+approve:
+
+```
+method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object
+```
