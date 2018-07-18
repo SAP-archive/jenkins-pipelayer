@@ -9,8 +9,7 @@ def call(String path, commit) {
         path = 'config/*.properties'
     }
     if (!commit || !commit.GIT_URL || !commit.GIT_BRANCH) {
-        error 'Cannot generate Jobs. Job must be triggered by a commit.'
-            + ' If you are running a multibranch job. Run Scan Multibranch Pipeline Now'
+        error 'Cannot generate Jobs. Job must be triggered by a commit.\nIf you are running a multibranch job. Run Scan Multibranch Pipeline Now'
         return
     }
 
@@ -59,12 +58,13 @@ def call(String path, commit) {
         }
     }
 
-    def jobDefinition = libraryResource 'com/sap/corydoras/seed/jobs.groovy'
-    writeFile file: 'seed/jobs.groovy', text: jobDefinition
+    def targetFile = 'seed/jobs.groovy'
+    def jobDefinition = libraryResource "com/sap/corydoras/${targetFile}"
+    writeFile file: targetFile, text: jobDefinition
 
     jobDsl removedJobAction: 'DELETE',
             removedViewAction: 'DELETE',
-            targets: 'seed/jobs.groovy',
+            targets: targetFile,
             unstableOnDeprecation: true,
             additionalParameters: [
                 pipelineJobs: arrFiles,
