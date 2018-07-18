@@ -3,10 +3,10 @@
 def call(commit) {
     arrFiles = []
     path = '**/Jenkinsfile'
-    if (!commit || !commit.GIT_URL) {
-        error 'Cannot generate Jobs. Job must be triggered by a commit.\nIf you are running a multibranch job. Run Scan Multibranch Pipeline Now'
-        return
-    }
+    // if (!commit || !commit.GIT_URL) {
+    //     error 'Cannot generate Jobs. Job must be triggered by a commit.\nIf you are running a multibranch job. Run Scan Multibranch Pipeline Now'
+    //     return
+    // }
 
     findFiles(glob: path).each { file ->
         if (file.path.endsWith('/Jenkinsfile')) {
