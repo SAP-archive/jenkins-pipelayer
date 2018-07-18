@@ -1,10 +1,13 @@
 #!/usr/bin/env groovy
 
-import com.sap.corydoras.Parser
-
 def call(commit) {
     arrFiles = []
     path = '**/Jenkinsfile'
+    if (!commit || !commit.GIT_URL) {
+        error 'Cannot generate Jobs. Job must be triggered by a commit.'
+            + ' If you are running a multibranch job. Run Scan Multibranch Pipeline Now'
+        return
+    }
 
     findFiles(glob: path).each { file ->
         if (file.path.endsWith('/Jenkinsfile')) {
@@ -18,6 +21,7 @@ def call(commit) {
     def targetFile = 'seed/multijobs.groovy'
     def jobDefinition = libraryResource "com/sap/corydoras/${targetFile}"
     writeFile file: targetFile, text: jobDefinition
+
 
     jobDsl removedJobAction: 'DELETE',
             removedViewAction: 'DELETE',

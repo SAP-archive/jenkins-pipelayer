@@ -8,6 +8,11 @@ def call(String path, String destination, commit) {
     if (!path) {
         path = 'jobs/**/*.groovy'
     }
+    if (!commit || !commit.GIT_URL || !commit.GIT_BRANCH) {
+        error 'Cannot generate Jobs. Job must be triggered by a commit.'
+            + ' If you are running a multibranch job. Run Scan Multibranch Pipeline Now'
+        return
+    }
 
     findFiles(glob: path).each { file ->
         fileContent = sh returnStdout: true, script: "cat ${file.path}"
