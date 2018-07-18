@@ -35,21 +35,27 @@ method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object
 To generate pipeline jobs from folder `jobs` into jenkins folder `pipelines`, call function `generateJobs`
 
 ```groovy
-commit = checkout scm
+script {
+    commit = checkout scm
+}
 generateJobs 'jobs/**/*.groovy', 'pipelines', commit
 ```
 
 To generate pipeline jobs from templates configurable from property files located in folder `config`, run `processTemplates`
 
 ```groovy
-commit = checkout scm
+script {
+    commit = checkout scm
+}
 generateJobs 'config/*.properties', commit
 ```
 
 To generate pipeline jobs from multiple files `Jenkinsfile` located in subfolders, run `generateMultiPipeline`
 
 ```groovy
-commit = checkout scm
+script {
+    commit = checkout scm
+}
 generateMultipipeline commit
 ```
 
