@@ -32,12 +32,13 @@ def call(String path, String destination, commit) {
         ]
     }
 
-    def jobDefinition = libraryResource 'com/sap/corydoras/seed/jobs.groovy'
-    writeFile file: 'seed/jobs.groovy', text: jobDefinition
+    def targetFile = 'seed/jobs.groovy'
+    def jobDefinition = libraryResource "com/sap/corydoras/${targetFile}"
+    writeFile file: targetFile, text: jobDefinition
 
     jobDsl removedJobAction: 'DELETE',
             removedViewAction: 'DELETE',
-            targets: 'seed/jobs.groovy',
+            targets: targetFile,
             unstableOnDeprecation: true,
             additionalParameters: [
                 pipelineJobs: arrFiles,
