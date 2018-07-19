@@ -10,18 +10,24 @@
     this file is called by the Jenkinsfile, props object is defined there
  */
 
-basePath = props.basePath
-
-folder(basePath) {
-    description """
-This folder is automaticaly generated. It contains pipeline unit jobs.<br>
-Jobs are imported from folders 'jobs' and 'jobdsl' under branch ${props.gitConfigJenkinsBranch} versioned at your github project
-"""
+basePath = ''
+if (props['basePath']) {
+    basePath = props['basePath']
+    folder(basePath) {
+        description """
+    This folder is automaticaly generated. It contains pipeline unit jobs.<br>
+    Jobs are imported from folders 'jobs' and 'jobdsl' under branch ${props.gitConfigJenkinsBranch} versioned at your github project
+    """
+    }
 }
 
 pipelineJobs.each { file ->
     try {
-        pipelineJob("${basePath}/${file.name}") {
+        def jobPath = file.name
+        if (basePath != '') {
+            jobPath = "${basePath}/${jobPath}"
+        }
+        pipelineJob(jobPath) {
             //here we force job to get a description
             description "${file.description}"
 

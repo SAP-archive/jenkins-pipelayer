@@ -70,7 +70,7 @@ def call(String path, commit) {
                 pipelineJobs: arrFiles,
                 props: [
                     // root folder to generate the pipeline jobs
-                    basePath: destination,
+                    basePath: properties['jenkins.job.destination'],
                     // address to fetch the jobs
                     gitRemoteUrl: "${commit.GIT_URL}",
                     // branch the jenkins jobs are on

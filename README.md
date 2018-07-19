@@ -97,6 +97,8 @@ jenkins.job.name=dummy-job
 jenkins.job.pipeline=templates/my-dummy-job.groovy
 ```
 
+you can also set `jenkins.job.destination` to import the job with name `jenkins.job.name` to folder `jenkins.job.destination`
+
 ## Known limitations
 
  - Pipeline keyword `jobDsl` is called, therefore you cannot cummulate multiple generation methods within the same job.
