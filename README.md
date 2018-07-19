@@ -47,7 +47,7 @@ To generate pipeline jobs from templates configurable from property files locate
 script {
     commit = checkout scm
 }
-generateJobs 'config/*.properties', commit
+processTemplates 'config/*.properties', commit
 ```
 
 To generate pipeline jobs from multiple files `Jenkinsfile` located in subfolders, run `generateMultiPipeline`
@@ -59,7 +59,45 @@ script {
 generateMultipipeline commit
 ```
 
-## Known limitation
+## Template Engine
+
+### Create a template
+
+Templates are pipelines that contains variables in the form of `{{key}}`
+This syntax is inspired by the logic less template engine [mustache](https://mustache.github.io), but does only sypport the variable replacement functionnality.
+
+example of template:
+
+```
+pipeline {
+    agent any
+    parameters {
+        booleanParam(name: 'HCP_HOST', defaultValue: "{{hcp.host}}")
+    }
+    stage('dummy') {
+        steps {
+            println params.HCP_HOST
+        }
+    }
+}
+```
+
+### Use the template
+
+Create or modify a property file in `config` folder.
+Set property `jenkins.job.pipeline` to the pipeline template you want to use.
+Set a name for the job with property `jenkins.job.name`
+
+
+example of property file `./config/my-dymmy-job.properties`:
+
+```
+hcp.host=int.sap.hana.ondemand.com
+jenkins.job.name=dummy-job
+jenkins.job.pipeline=templates/my-dummy-job.groovy
+```
+
+## Known limitations
 
  - Pipeline keyword `jobDsl` is called, therefore you cannot cummulate multiple generation methods within the same job.
    Workaround if you call corydoras generation methods from within a Jenkins file is to condition depending on branches.
