@@ -8,10 +8,10 @@ def call(String path, commit) {
     if (!path) {
         path = 'config/*.properties'
     }
-    // if (!commit || !commit.GIT_URL || !commit.GIT_BRANCH) {
-    //     error 'Cannot generate Jobs. Job must be triggered by a commit.\nIf you are running a multibranch job. Run Scan Multibranch Pipeline Now'
-    //     return
-    // }
+    if (!commit || !commit['GIT_URL'] || !commit['GIT_BRANCH']) {
+        error 'Cannot generate Jobs. Job must be triggered by a commit.\nIf you are running a multibranch job. Run Scan Multibranch Pipeline Now'
+        return
+    }
 
     findFiles(glob: path).each { propertyFile ->
         def properties = readProperties file: propertyFile.path
@@ -31,25 +31,25 @@ def call(String path, commit) {
                 name: properties['jenkins.job.name'],
 
                 // get description from the first comment /* */ of the file
-                description: utils.getDescription(fileContent, filePath),
+                description: parser.getDescription(fileContent, filePath),
 
                 // copy as is triggers definition
-                triggers: utils.getTriggers(fileContent, filePath),
+                triggers: parser.getTriggers(fileContent, filePath),
 
 
                 // try to extract parameters in order to generate parameters with the job
                 // normaly we would have to wait a first run
                 // of the pipeline in order to generate the parameters.
                 // Instead we create them in the jobdsl script
-                parameters: utils.getParameters(fileContent, filePath),
+                parameters: parser.getParameters(fileContent, filePath),
 
 
                 // extract autorization matrix rights
-                authorizations: utils.getAuthorizations(fileContent, filePath),
+                authorizations: parser.getAuthorizations(fileContent, filePath),
 
 
                 // extract environment variables
-                environmentVariables: utils.getEnvironmentVariables(fileContent, filePath),
+                environmentVariables: parser.getEnvironmentVariables(fileContent, filePath),
 
 
                 // owner is creator of the file
