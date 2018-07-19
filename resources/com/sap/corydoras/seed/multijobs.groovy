@@ -36,9 +36,6 @@ pipelineJobs.each { file ->
                     numToKeep(100)
                 }
             }
-            triggers {
-                periodic(1)
-            }
         }
     } catch (Exception err) {
         println "Error with file ${file.path}"
