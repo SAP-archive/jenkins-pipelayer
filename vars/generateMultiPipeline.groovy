@@ -1,16 +1,13 @@
 #!/usr/bin/env groovy
 
-def call(commit, jenkinsContext) {
+def call(commit) {
     arrFiles = []
     path = '**/Jenkinsfile'
     if (!commit || !commit['GIT_URL']) {
         error 'Cannot generate Jobs. Job must be triggered by a commit.\nIf you are running a multibranch job. Run Scan Multibranch Pipeline Now'
         return
     }
-    if (!jenkinsContext) {
-        jenkinsContext = this
-    }
-    jenkinsContext.findFiles(glob: path).each { file ->
+    findFiles(glob: path).each { file ->
         if (file.path.endsWith('/Jenkinsfile')) {
             arrFiles << [
                 path: file.path,
@@ -21,9 +18,9 @@ def call(commit, jenkinsContext) {
 
     def targetFile = 'seed/multijobs.groovy'
     def jobDefinition = libraryResource "com/sap/corydoras/${targetFile}"
-    jenkinsContext.writeFile file: targetFile, text: jobDefinition
+    writeFile file: targetFile, text: jobDefinition
 
-    jenkinsContext.jobDsl removedJobAction: 'DELETE',
+    jobDsl removedJobAction: 'DELETE',
             removedViewAction: 'DELETE',
             targets: targetFile,
             unstableOnDeprecation: true,
