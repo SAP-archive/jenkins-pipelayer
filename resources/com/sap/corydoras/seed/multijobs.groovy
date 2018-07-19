@@ -17,7 +17,6 @@ pipelineJobs.each { file ->
             branchSources {
                 git {
                     remote(props.gitRemoteUrl)
-                    includes("${folderPath}/.*")
                 }
                 //discover branches. to be replaced when issue JENKINS-45504 is closed
                 configure {
