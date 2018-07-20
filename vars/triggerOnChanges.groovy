@@ -17,14 +17,16 @@ done
 private jobsToTrigger() {
     changedFiles = getChangedFiles()
     arrFiles = []
-    findFiles(glob: '**/*').each { file ->
-        if (file.path.endsWith('/Jenkinsfile')) {
-            def jobName = file.path - ~/\/Jenkinsfile$/
-            for (changedFile in changedFiles) {
-                if (changedFile.startsWith(jobName)) {
-                    arrFiles << jobName.replace('/', '-')
-                    break
-                }
+    jobs = []
+    findFiles(glob: '**/*/Jenkinsfile').each { file ->
+        def jobName = file.path - ~/\/Jenkinsfile$/
+        jobs << jobName
+    }
+    for (changedFile in changedFiles) {
+        for (jobName in jobs) {
+            if (changedFile.startsWith(jobName)) {
+                arrFiles << jobName.replace('/', '-')
+                break
             }
         }
     }
