@@ -99,6 +99,15 @@ jenkins.job.pipeline=templates/my-dummy-job.groovy
 
 you can also set `jenkins.job.destination` to import the job with name `jenkins.job.name` to folder `jenkins.job.destination`
 
+## Multipipeline
+
+Now you generate jobs, from Jenkinsfile in subfolders, with method `generateMultipipeline`, you can trigger only the job that got new changes with method `triggerOnChanges`
+
+```
+generateMultipipeline commit
+triggerOnChanges this
+```
+
 ## Known limitations
 
  - Pipeline keyword `jobDsl` is called, therefore you cannot cummulate multiple generation methods within the same job.
