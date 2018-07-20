@@ -5,7 +5,10 @@ private getChangedFiles() {
 changeSets=(`git diff-tree --no-commit-id --name-status -r HEAD`)
 for(( i=0; i<${#changeSets[@]}; i++))
 do
-  echo ${changeSets[$i+1]}
+  if [ ${changeSets[$i]} == "A" ] || [ ${changeSets[$i]} == "M" ] || [ ${changeSets[$i]} == "D" ] 
+  then
+    echo ${changeSets[$i+1]}
+  fi
 done
 '''
     output.replace('\r', '').split('\n')
