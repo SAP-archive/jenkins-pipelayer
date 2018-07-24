@@ -12,7 +12,11 @@
 
 basePath = ''
 if (props['basePath']) {
-    basePath = props['basePath']
+    if (props['basePath'] == '.') {
+        basePath = ''
+    } else {
+        basePath = props['basePath']
+    }
     folder(basePath) {
         description """
     This folder is automaticaly generated. It contains pipeline unit jobs.<br>
