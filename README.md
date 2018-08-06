@@ -19,7 +19,7 @@ The seeds are in `resources` folder.
 
 To help you understand this project, [we made a sample](https://github.wdf.sap.corp/devops-ci/corydoras-sample/)
 
-To understand [how jobdsl work](https://github.com/jenkinsci/job-dsl-plugin/wiki/Tutorial---Using-the-Jenkins-Job-DSL)
+To understand how jobdsl works [have a look at the documentation](https://github.com/jenkinsci/job-dsl-plugin/wiki/Tutorial---Using-the-Jenkins-Job-DSL). You could also go see the [jobdsl api documentation](https://jenkinsci.github.io/job-dsl-plugin/)
 
 ## Requirements
 
