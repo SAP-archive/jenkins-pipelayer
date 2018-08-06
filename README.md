@@ -14,8 +14,12 @@ This Jenkins Library introduces new ways to import jobs programmatically into je
 ## How it works
 
 Uses JobDSL to generate pipelines with checkout from scm.
+
 The seeds are in `resources` folder.
 
+To help you understand this project, [we made a sample](https://github.wdf.sap.corp/devops-ci/corydoras-sample/)
+
+To understand [how jobdsl work](https://github.com/jenkinsci/job-dsl-plugin/wiki/Tutorial---Using-the-Jenkins-Job-DSL)
 
 ## Requirements
 
