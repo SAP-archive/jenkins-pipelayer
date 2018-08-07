@@ -23,12 +23,16 @@ def call(String path, commit) {
             fileContent = "//template: ${properties['jenkins.job.template']}  properties: ${propertyFile}" + fileContent
 
             def filePath = properties['jenkins.job.template']
+            def fileName = properties['jenkins.job.name']
+            if (!fileName) {
+                fileName = file.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
+            }
             arrFiles <<  [
                 // Template path
                 content: fileContent,
 
                 // name of the job
-                name: properties['jenkins.job.name'],
+                name: fileName,
 
                 // get description from the first comment /* */ of the file
                 description: parser.getDescription(fileContent, filePath),
