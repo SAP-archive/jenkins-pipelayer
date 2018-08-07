@@ -25,7 +25,7 @@ def call(String path, commit) {
             def filePath = properties['jenkins.job.template']
             def fileName = properties['jenkins.job.name']
             if (!fileName) {
-                fileName = fileName.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
+                fileName = filePath.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
             }
             arrFiles <<  [
                 // Template path
