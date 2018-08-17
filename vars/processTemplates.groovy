@@ -16,19 +16,22 @@ def call(String path, commit) {
     findFiles(glob: path).each { propertyFile ->
         def properties = readProperties file: propertyFile.path
         if (properties['jenkins.job.template']) {
-            def fileContent = sh returnStdout: true, script: "cat ${properties['jenkins.job.template']}"
+            def filePath = properties['jenkins.job.template']
+            def fileContent = sh returnStdout: true, script: "cat ${filePath}"
             properties.each { key, value ->
                 fileContent = fileContent.replace(/{{${key}}}/, value)
             }
-            fileContent = "//template: ${properties['jenkins.job.template']}  properties: ${propertyFile}" + fileContent
+            fileContent = "//template: ${filePath}  properties: ${propertyFile}\n" + fileContent
 
-            def filePath = properties['jenkins.job.template']
             def fileName = properties['jenkins.job.name']
             if (!fileName) {
                 fileName = filePath.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
             }
             arrFiles <<  [
-                // Template path
+                // Template path (only used to link with githubProjectUrl
+                path: filePath,
+                
+                // Template content
                 content: fileContent,
 
                 // name of the job
