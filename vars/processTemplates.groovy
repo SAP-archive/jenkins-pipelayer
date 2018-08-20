@@ -21,7 +21,8 @@ def call(String path, commit) {
             properties.each { key, value ->
                 fileContent = fileContent.replace(/{{${key}}}/, value)
             }
-            fileContent = "//template: ${filePath}  properties: ${propertyFile}\n" + fileContent
+            // note: we comment the first line in case a shebang is present
+            fileContent = "//template: ${filePath}  properties: ${propertyFile}" + fileContent
 
             def fileName = properties['jenkins.job.name']
             if (!fileName) {
