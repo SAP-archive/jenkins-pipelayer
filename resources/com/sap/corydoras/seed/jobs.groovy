@@ -32,6 +32,11 @@ pipelineJobs.each { file ->
             jobPath = "${basePath}/${jobPath}"
         }
         pipelineJob(jobPath) {
+
+            if (file.displayName){
+                displayName "${file.displayName}"
+            }
+
             //here we force job to get a description
             description "${file.description}"
 

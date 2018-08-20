@@ -30,12 +30,14 @@ def call(String path, commit) {
             arrFiles <<  [
                 // Template path (only used to link with githubProjectUrl
                 path: filePath,
-                
+
                 // Template content
                 content: fileContent,
 
                 // name of the job
                 name: fileName,
+
+                displayName: parser.getDisplayName(fileContent, file.path),
 
                 // get description from the first comment /* */ of the file
                 description: parser.getDescription(fileContent, filePath),
