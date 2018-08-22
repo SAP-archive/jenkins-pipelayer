@@ -8,7 +8,7 @@
 package com.sap.corydoras
 
 /**
- * Class to monitor xMake
+ * Class to look for properties from within pipeline files
  */
 class Parser {
 
