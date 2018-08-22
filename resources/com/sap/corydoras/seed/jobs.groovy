@@ -52,11 +52,6 @@ pipelineJobs.each { file ->
             logRotator {
                 numToKeep(19)
             }
-            wrappers {
-                colorizeOutput()
-                timeout { absolute(120) }
-                timestamps()
-            }
             if (file.authorizations) {
                 authorization evaluate(file.authorizations)
             }
