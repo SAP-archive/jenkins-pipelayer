@@ -49,9 +49,9 @@ def call(String path, String destination, commit, additionalParameters) {
 
     //copy src to jenkins
     if (additionalParameters.copySrc) {
-        resourcesDestination = "$JENKINS_HOME/job_resources/$destination"
-        sh "mkdir -p $resourcesDestination"
-        sh "cp -r * $resourcesDestination"
+        sourcesDestination = "$JENKINS_HOME/job_resources/$destination"
+        sh "mkdir -p $sourcesDestination"
+        sh "cp -r * $sourcesDestination"
     }
 
     findFiles(glob: path).each { file ->
@@ -63,8 +63,8 @@ def call(String path, String destination, commit, additionalParameters) {
         if (additionalParameters.useTemplate) {
             try {
                 (filePath, name, fileContent) = processTemplate(file)
-                if (resourcesDestination) {
-                    fileContent = fileContent.replace(/{{resources.directory}}/, resourcesDestination)
+                if (sourcesDestination) {
+                    fileContent = fileContent.replace(/{{sources.directory}}/, sourcesDestination)
                 }
             } catch (NoTemplateException exception) {
                 println "You did not specify a template in $file.path, pass"
