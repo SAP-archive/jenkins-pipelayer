@@ -44,7 +44,7 @@ class Parser {
      * @return          the display Name or empty string
      */
     def getDisplayName(content, filePath) {
-        def pattern = /(?im)^\/\/@displayName=/ //case insensitive
+        def pattern = /(?im)^\/\/@displayName *= */ //case insensitive
         try {
             return content.find(pattern + /(.*)$/).replaceAll(pattern, '')
         } catch (Exception ex) {
