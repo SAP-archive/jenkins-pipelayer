@@ -104,6 +104,5 @@ def call(String path, String destination, commit, additionalParameters) {
                     gitRemoteUrl: "${commit.GIT_URL}",
                     gitConfigJenkinsBranch: "${commit.GIT_BRANCH.replaceAll(/^origin\//, '')}"
                 ]
-            ],
-            sandbox: true
+            ]
 }
