@@ -18,7 +18,7 @@ def call(String path, String destination, commit) {
         arrFiles << [
             path: file.path,
             name: parser.getBaseName(file.name),
-            displayName: parser.getDisplayName(fileContent, file.path),
+            displayName: parser.getDisplayName(fileContent),
             // get description from the first comment /* */ of the file
             description: parser.getDescription(fileContent, file.path),
             // copy as is triggers definition

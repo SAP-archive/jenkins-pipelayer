@@ -38,7 +38,7 @@ def call(String path, commit) {
                 // name of the job
                 name: fileName,
 
-                displayName: parser.getDisplayName(fileContent, filePath),
+                displayName: parser.getDisplayName(fileContent),
 
                 // get description from the first comment /* */ of the file
                 description: parser.getDescription(fileContent, filePath),
