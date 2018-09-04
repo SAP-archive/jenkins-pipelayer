@@ -1,0 +1,63 @@
+#!/usr/bin/env groovy
+
+//@displayName = dummy script
+/*
+    This is a multiline
+    description that
+    can contain anything,
+    numbers 123456789,
+    symbols $%:;*\/,<br>
+    EVERYTHING
+*/
+
+pipeline {
+    dummyBlock {
+        dummy = 'dummy'
+    }
+    environment {
+        envVar = 'my_env_variable'
+    }
+    agent {
+        docker {
+            image 'docker.wdf.sap.corp:50000/eos/gradle'
+            label 'linux_x64'
+            alwaysPull true
+        }
+    }
+    triggers {
+        cron(* * * * *)
+    }
+    options {
+        ansiColor('xterm')
+        buildDiscarder(logRotator(numToKeepStr: '100'))
+        timeout(time: 30, unit: 'MINUTES')
+    }
+    parameters {
+        string(name: 'DEPLOY_ENV', defaultValue: 'staging', description: '')
+        text(name: 'DEPLOY_TEXT', defaultValue: 'One\nTwo\nThree\n', description: '')
+        booleanParam(name: 'DEBUG_BUILD', defaultValue: true, description: '')
+        choice(name: 'CHOICES', choices: 'one\ntwo\nthree', description: '')
+        file(name: 'FILE', description: 'Some file to upload')
+        password(name: 'PASSWORD', defaultValue: 'SECRET', description: 'A secret password')
+    }
+    authorizationMatrix {
+
+    }
+    stages {
+        stage('Lint') {
+            steps {
+                lock(resource: "${env.JOB_NAME}/10", inversePrecedence: true) {
+                    milestone 10
+                    script {
+                        commit = checkout scm
+                        try {
+                            sh 'gradle codenarcMain'
+                        } catch (error) {
+                            currentBuild.result = 'UNSTABLE'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

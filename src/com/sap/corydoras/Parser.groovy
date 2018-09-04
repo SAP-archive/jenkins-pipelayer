@@ -40,10 +40,9 @@ class Parser {
     /**
      * extract displayName
      * @param  content  content with/without displayName
-     * @param  filePath path of the file to extract the displayName from
      * @return          the display Name or empty string
      */
-    def getDisplayName(content, filePath) {
+    def getDisplayName(content) {
         def pattern = /(?im)^\/\/@displayName *= */ //case insensitive
         try {
             return content.find(pattern + /(.*)$/).replaceAll(pattern, '')
@@ -54,18 +53,22 @@ class Parser {
 
     /**
      * extract description from first comment block slash star
-     * appends two br tags before the description. add br tags every newlines except if line ends with ">"
+     * add br tags every newlines except if line ends with ">"
      * @param  content  content with multiline comment
      * @param  filePath path of the file to extract the comment from
      * @return          the first comment content
      */
     def getDescription(content, filePath) {
         try {
-            def extractComment = content.find(/(?m)\*([^*]|[\n]|(\*+([^*\/]|[\n])))*\*+/)
-            def description = extractComment.substring(3, extractComment.size() - 3)
-            description.replaceAll('\n', '<br>\n').replaceAll('><br>\n', '>\n')
+            def description = ''
+            def descriptionPattern = /(?m)\/\*([\S\s]*)\*\//
+            def descriptionMatcher = content =~ descriptionPattern
+            while (descriptionMatcher.find()) {
+                description = descriptionMatcher.group(1)
+            }
+            return description.trim().replaceAll(/>\s*\n\s*/, '>\n').replaceAll(/(?<!>)\s*\n\s*/, '<br>\n')
         } catch (Exception ex) {
-            println 'could not extract comment for file ' + filePath
+            println 'could not extract description for file ' + filePath
             println ex
             println 'you must provide a comment at the beginning of the file in form /* my wonderful description */'
             ''

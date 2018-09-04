@@ -78,7 +78,7 @@ def call(String path, String destination, commit, additionalParameters) {
         arrFiles << [
             path: filePath,
             name: name,
-            displayName: parser.getDisplayName(fileContent, filePath),
+            displayName: parser.getDisplayName(fileContent),
             description: parser.getDescription(fileContent, filePath),
             triggers: parser.getTriggers(fileContent, filePath),
             parameters: parser.getParameters(fileContent, filePath),
