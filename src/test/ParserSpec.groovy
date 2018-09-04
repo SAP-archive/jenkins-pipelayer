@@ -10,7 +10,7 @@ class ParserSpec extends Specification {
 
     def 'correctly extract block with given name'() {
         expect:
-            parser.extractBlock('dummyBlock', scriptContent) == "\r\n        dummy = 'dummy'\r\n    "
+            parser.extractBlock('dummyBlock', scriptContent) == "\n        dummy = 'dummy'\n    "
     }
     def 'correctly parse displayName'() {
         expect:

@@ -41,7 +41,7 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.13'
     compile 'com.cloudbees:groovy-cps:1.24'
     testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
-    testCompile 'junit:junit:4.12'
+    testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
 }
 
 allprojects {

@@ -61,9 +61,9 @@ class Parser {
     def getDescription(content, filePath) {
         try {
             def description = ''
-            def descriptionPattern = /(?m)\/\*([\S\s]*)\*\//
+            def descriptionPattern = /(?m)\/\*([\S\s]+?)\*\//
             def descriptionMatcher = content =~ descriptionPattern
-            while (descriptionMatcher.find()) {
+            if (descriptionMatcher.find()) {
                 description = descriptionMatcher.group(1)
             }
             return description.trim().replaceAll(/>\s*\n\s*/, '>\n').replaceAll(/(?<!>)\s*\n\s*/, '<br>\n')
