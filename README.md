@@ -1,6 +1,6 @@
 # Corydas
 
-pipeline job generation made easy 
+pipeline job generation made easy
 
 ## Description
 
@@ -36,7 +36,7 @@ method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object
 
 ## Usage
 
-To generate pipeline jobs from folder `jobs` into jenkins folder `pipelines`, call function `generateJobs`
+To generate pipeline jobs from folder `jobs` into jenkins folder `pipelines`, call function `generateJobs`.
 
 ```groovy
 script {
@@ -44,6 +44,9 @@ script {
 }
 generateJobs 'jobs/**/*.groovy', 'pipelines', commit
 ```
+
+**Warning: this method is now deprecated: use `generateJobsMultiSources` instead.**
+
 
 To generate pipeline jobs from templates configurable from property files located in folder `config`, run `processTemplates`
 
@@ -54,6 +57,9 @@ script {
 processTemplates 'config/*.properties', commit
 ```
 
+**Warning: this method is now deprecated: use `generateJobsMultiSources` instead.**
+
+
 To generate pipeline jobs from multiple files `Jenkinsfile` located in subfolders, run `generateMultiPipeline`
 
 ```groovy
@@ -62,6 +68,34 @@ script {
 }
 generateMultipipeline commit
 ```
+
+To generate jobs from jobs or templates configuration files, use `generateJobsMultiSources`.
+
+Usage:
+
+```groovy
+    generateJobsMultiSources path, destination, commit, additionalParameters
+```
+
+- **path**: path to your files (either jobs or templates configuration files)
+
+- **destination**: where to create the jobs
+
+- **commit**: commit info
+
+- **additionalParameters**:
+    - useTemplate: specifies wether you want to use templates. If so, it will process files in `config/*.properties` by default.
+    - withContent: specifies wether you want to use your files contents as groovy scripts for the jobs. If not set, groovy scripts will be fetched from GitHub when running the jobs. This parameter is useless if you use templates.
+    - copySrc: specifies wheter you want to copy your project's files to Jenkins. If yes, files will be copied to `$JENKINS_HOME/job_resources/{{destination}}`
+
+```groovy
+script {
+    commit = checkout scm
+}
+generateJobsMultiSources 'jobs/**/*.groovy', 'pipelines', commit, additionalParameters: [ copySrc: true ]
+```
+
+**Note:** you will certainly have to approve the generated scripts in *Manage Jenkins -> In-process Script Approval*
 
 ## Template Engine
 
