@@ -57,8 +57,13 @@ pipelineJobs.each { file ->
             }
             properties {
                 def baseProjectGithubUrl = props.gitRemoteUrl.replaceAll(/\.git$/, '').replaceAll(/^git@/, 'https://').replaceAll(/com\:/, 'com/')
-
-                githubProjectUrl("${baseProjectGithubUrl}/blob/${props.gitConfigJenkinsBranch}/${file.path}")
+                def projectUrl = ''
+                if (props['localPath']) {
+                    projectUrl = "${baseProjectGithubUrl}/blob/${props.gitConfigJenkinsBranch}/${props.localPath}/${file.path}"
+                } else {
+                    projectUrl = "${baseProjectGithubUrl}/blob/${props.gitConfigJenkinsBranch}/${file.path}"
+                }
+                githubProjectUrl(projectUrl)
                 rebuild {
                     autoRebuild(file.authorizations ? false : true)
                 }
