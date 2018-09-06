@@ -102,7 +102,8 @@ def call(String path, String destination, commit, additionalParameters) {
                 props: [
                     basePath: destination,
                     gitRemoteUrl: "${commit.GIT_URL}",
-                    gitConfigJenkinsBranch: "${commit.GIT_BRANCH.replaceAll(/^origin\//, '')}"
+                    gitConfigJenkinsBranch: "${commit.GIT_BRANCH.replaceAll(/^origin\//, '')}",
+                    localPath: additionalParameters.localPath
                 ]
             ]
 }
