@@ -6,7 +6,26 @@ import com.sap.corydoras.Parser
 @InheritConstructors
 class NoTemplateException extends Exception {}
 
-private processTemplate(file) {
+private infoMessage(localPath) {
+    def location = localPath ? "${localPath}/${filePath}" : filePath
+    """
+//////////////////////////////////////////
+// This file was automatically generated from template: ${location} with file properties: ${file}
+// Please update this file from github and not directly in jenkins
+//////////////////////////////////////////
+"""
+}
+
+private insureNoShebang(fileContent) {
+    if (!fileContent.startsWith('!#')) {
+        return fileContent
+    } else {
+        fileContentArray = fileContent.split('\n')
+        return fileContentArray[1..fileContentArray.size-1].join('')
+    }
+}
+
+private processTemplate(file, localPath) {
     def properties = readProperties file: file.path
     if (!properties['jenkins.job.template']) {
         throw new NoTemplateException()
@@ -18,8 +37,7 @@ private processTemplate(file) {
     }
 
     // note: we comment the first line in case a shebang is present
-    fileContent = "//template: ${filePath}  properties: ${file}" + fileContent
-
+    fileContent = infoMessage(localPath) + insureNoShebang(fileContent)
     def fileName = properties['jenkins.job.name']
     if (!fileName) {
         fileName = filePath.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
@@ -62,7 +80,7 @@ def call(String path, String destination, commit, additionalParameters) {
 
         if (additionalParameters.useTemplate) {
             try {
-                (filePath, name, fileContent) = processTemplate(file)
+                (filePath, name, fileContent) = processTemplate(file, additionalParameters.localPath)
                 if (sourcesDestination) {
                     fileContent = fileContent.replace(/{{sources.directory}}/, sourcesDestination)
                 }
