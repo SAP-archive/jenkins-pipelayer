@@ -69,9 +69,9 @@ def call(String path, String destination, commit, additionalParameters) {
 
     //copy src to jenkins
     if (additionalParameters.copySrc) {
-        sourcesDestination = "$JENKINS_HOME/job_resources/$destination"
-        sh "mkdir -p $sourcesDestination"
-        sh "cp -r * $sourcesDestination"
+        resourcesDestination = "$JENKINS_HOME/job_resources/$destination"
+        sh "mkdir -p $resourcesDestination"
+        sh "cp -r * $resourcesDestination"
     }
 
     findFiles(glob: path).each { file ->
@@ -83,8 +83,8 @@ def call(String path, String destination, commit, additionalParameters) {
         if (additionalParameters.useTemplate) {
             try {
                 (filePath, name, fileContent) = processTemplate(file, additionalParameters.localPath)
-                if (sourcesDestination) {
-                    fileContent = fileContent.replace(/{{sources.directory}}/, sourcesDestination)
+                if (resourcesDestination) {
+                    fileContent = fileContent.replace(/{{sources.directory}}/, resourcesDestination)
                 }
                 arrFiles << [
                     path: filePath,
