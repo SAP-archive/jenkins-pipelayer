@@ -52,7 +52,7 @@ def call(String path, String destination, commit, additionalParameters) {
     def resourcesDestination = ''
 
     if (!path) {
-        if (additionalParameters.useTemplate) {
+        if (additionalParameters && additionalParameters.useTemplate) {
             path = 'config/*.properties'
         } else {
             path = 'jobs/**/*.groovy'
@@ -65,7 +65,7 @@ def call(String path, String destination, commit, additionalParameters) {
     }
 
     //copy src to jenkins
-    if (additionalParameters.copySrc) {
+    if (additionalParameters && additionalParameters.copySrc) {
         resourcesDestination = "$JENKINS_HOME/job_resources/$destination"
         sh "mkdir -p $resourcesDestination"
         sh "cp -r * $resourcesDestination"
@@ -77,7 +77,7 @@ def call(String path, String destination, commit, additionalParameters) {
         def filePath = ''
         def fileContent = ''
 
-        if (additionalParameters.useTemplate) {
+        if (additionalParameters && additionalParameters.useTemplate) {
             try {
                 (filePath, name, fileContent) = processTemplate(file, additionalParameters.localPath)
                 if (resourcesDestination) {
@@ -111,7 +111,7 @@ def call(String path, String destination, commit, additionalParameters) {
                 authorizations: parser.getAuthorizations(fileContent, filePath),
                 environmentVariables: parser.getEnvironmentVariables(fileContent, filePath),
                 author: sh(returnStdout: true, script: "git log --format=%an ${filePath} | tail -1").trim(),
-                content: additionalParameters.withContent || additionalParameters.useTemplate ? fileContent : ''
+                content: additionalParameters ? (additionalParameters.withContent || additionalParameters.useTemplate ? fileContent : '') : fileContent
             ]
         }
     }
@@ -130,7 +130,7 @@ def call(String path, String destination, commit, additionalParameters) {
                     basePath: destination,
                     gitRemoteUrl: "${commit.GIT_URL}",
                     gitConfigJenkinsBranch: "${commit.GIT_BRANCH.replaceAll(/^origin\//, '')}",
-                    localPath: additionalParameters.localPath
+                    localPath: additionalParameters ? additionalParameters.localPath : ''
                 ]
             ]
 }
