@@ -6,11 +6,11 @@ import com.sap.corydoras.Parser
 @InheritConstructors
 class NoTemplateException extends Exception {}
 
-private infoMessage(localPath) {
+private infoMessage(localPath, filePath) {
     def location = localPath ? "${localPath}/${filePath}" : filePath
     """
 //////////////////////////////////////////
-// This file was automatically generated from template: ${location} with file properties: ${file}
+// This file was automatically generated from template: ${location} with file properties: ${filePath}
 // Please update this file from github and not directly in jenkins
 //////////////////////////////////////////
 """
@@ -39,7 +39,7 @@ private processTemplate(file, localPath) {
     }
 
     // note: we comment the first line in case a shebang is present
-    fileContent = infoMessage(localPath) + insureNoShebang(fileContent)
+    fileContent = infoMessage(localPath, filePath) + insureNoShebang(fileContent)
     def fileName = properties['jenkins.job.name']
     if (!fileName) {
         fileName = filePath.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
