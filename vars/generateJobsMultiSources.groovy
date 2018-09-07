@@ -90,12 +90,11 @@ def call(String path, String destination, commit, additionalParameters) {
         } else {
             fileContent = sh returnStdout: true, script: "cat ${file.path}"
             filePath = file.path
-            name = parser.getBaseName(file.name)
         }
 
         arrFiles << [
             path: filePath,
-            name: name,
+            name: name ?: parser.getBaseName(file.name),
             displayName: parser.getDisplayName(fileContent),
             description: parser.getDescription(fileContent, filePath),
             triggers: parser.getTriggers(fileContent, filePath),
