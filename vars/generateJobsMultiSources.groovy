@@ -17,7 +17,7 @@ private infoMessage(localPath, filePath) {
 }
 
 private insureNoShebang(fileContent) {
-    if (!fileContent.startsWith('!#')) {
+    if (!fileContent.startsWith('#!')) {
         return fileContent
     } else {
         fileContentArray = fileContent.split('\n')
