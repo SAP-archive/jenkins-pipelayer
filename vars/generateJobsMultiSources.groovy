@@ -27,6 +27,8 @@ private insureNoShebang(fileContent) {
 
 private processTemplate(file, localPath) {
     def properties = readProperties file: file.path
+    println file.path
+    println properties
     if (!properties['jenkins.job.template']) {
         throw new NoTemplateException()
     }
@@ -84,26 +86,37 @@ def call(String path, String destination, commit, additionalParameters) {
                 if (sourcesDestination) {
                     fileContent = fileContent.replace(/{{sources.directory}}/, sourcesDestination)
                 }
+                arrFiles << [
+                    path: filePath,
+                    name: name ?: parser.getBaseName(file.name),
+                    displayName: parser.getDisplayName(fileContent),
+                    description: parser.getDescription(fileContent, filePath),
+                    triggers: parser.getTriggers(fileContent, filePath),
+                    parameters: parser.getParameters(fileContent, filePath),
+                    authorizations: parser.getAuthorizations(fileContent, filePath),
+                    environmentVariables: parser.getEnvironmentVariables(fileContent, filePath),
+                    author: sh(returnStdout: true, script: "git log --format=%an ${filePath} | tail -1").trim(),
+                    content: additionalParameters.withContent || additionalParameters.useTemplate ? fileContent : ''
+                ]
             } catch (NoTemplateException exception) {
                 println "You did not specify a template in $file.path, pass"
             }
         } else {
             fileContent = sh returnStdout: true, script: "cat ${file.path}"
             filePath = file.path
+            arrFiles << [
+                path: filePath,
+                name: name ?: parser.getBaseName(file.name),
+                displayName: parser.getDisplayName(fileContent),
+                description: parser.getDescription(fileContent, filePath),
+                triggers: parser.getTriggers(fileContent, filePath),
+                parameters: parser.getParameters(fileContent, filePath),
+                authorizations: parser.getAuthorizations(fileContent, filePath),
+                environmentVariables: parser.getEnvironmentVariables(fileContent, filePath),
+                author: sh(returnStdout: true, script: "git log --format=%an ${filePath} | tail -1").trim(),
+                content: additionalParameters.withContent || additionalParameters.useTemplate ? fileContent : ''
+            ]
         }
-
-        arrFiles << [
-            path: filePath,
-            name: name ?: parser.getBaseName(file.name),
-            displayName: parser.getDisplayName(fileContent),
-            description: parser.getDescription(fileContent, filePath),
-            triggers: parser.getTriggers(fileContent, filePath),
-            parameters: parser.getParameters(fileContent, filePath),
-            authorizations: parser.getAuthorizations(fileContent, filePath),
-            environmentVariables: parser.getEnvironmentVariables(fileContent, filePath),
-            author: sh(returnStdout: true, script: "git log --format=%an ${filePath} | tail -1").trim(),
-            content: additionalParameters.withContent || additionalParameters.useTemplate ? fileContent : ''
-        ]
     }
 
     def targetFile = 'seed/jobs.groovy'
