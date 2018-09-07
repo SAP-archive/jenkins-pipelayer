@@ -2,11 +2,11 @@
 
 import com.sap.corydoras.Parser
 
-private infoMessage(localPath) {
+private infoMessage(localPath, filePath) {
     def location = localPath ? "${localPath}/${filePath}" : filePath
     """
 //////////////////////////////////////////
-// This file was automatically generated from template: ${location} with file properties: ${file}
+// This file was automatically generated from template: ${location} with file properties: ${filePath}
 // Please update this file from github and not directly in jenkins
 //////////////////////////////////////////
 """
@@ -41,7 +41,7 @@ def call(String path, commit) {
             properties.each { key, value ->
                 fileContent = fileContent.replace(/{{${key}}}/, value)
             }
-            fileContent = infoMessage(localPath) + insureNoShebang(fileContent)
+            fileContent = infoMessage(localPath, filePath) + insureNoShebang(fileContent)
             def fileName = properties['jenkins.job.name']
             if (!fileName) {
                 fileName = filePath.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
