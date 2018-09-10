@@ -8,7 +8,7 @@
                from In-process Script Approval available in Manage page of jenkins
  */
 
-
+def githubApiUri = 'http://github.wdf.sap.corp/api/v3'
 def gitRemoteUrlArray = gitRemoteUrl.split('/')
 def repoOwner = gitRemoteUrlArray[-2]
 def repository = gitRemoteUrlArray[-1]​.replaceAll(/\.git$/, '')​​​​​​​​​​​​​​​​​​​​​​​​
@@ -18,12 +18,15 @@ pipelineJobs.each { file ->
         folderPath = file.path - ~/\/Jenkinsfile$/
         multibranchPipelineJob(file.name.replace('/', '-')) {
             displayName file.name.replace('/', ' - ')
+            triggers {
+                periodic(1)
+            }
             branchSources {
                 git {
                     remote(props.gitRemoteUrl)
                 }
                 github {
-                    apiUri('http://github.wdf.sap.corp/api/v3')
+                    apiUri(githubApiUri)
                     buildOriginBranchWithPR(false)
                     scanCredentialsId(props.githubCredentialId)
                     repoOwner(repoOwner)
