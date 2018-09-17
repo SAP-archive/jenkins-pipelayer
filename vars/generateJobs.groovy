@@ -62,7 +62,7 @@ def call(body) {
         path = config.path
     }
     
-    if (!config.gitRemoteUrl || !config.gitConfigJenkinsBranch) {
+    if (!config.gitRemoteUrl || !config.gitConfigJenkinsBranch || config.gitRemoteUrl == "null" || config.gitConfigJenkinsBranch == "null") {
         error '''gitRemoteUrl and gitConfigJenkinsBranch are mandatory parameters. you can get them from scm step.
 commit = checkout scm
 gitRemoteUrl = commit.GIT_URL
