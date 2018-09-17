@@ -22,7 +22,7 @@ pipelineJobs.each { file ->
                 configure {
                     def traits = it / sources / data / 'jenkins.branch.BranchSource' / source / traits
                     traits << 'jenkins.plugins.git.traits.BranchDiscoveryTrait' {
-                        strategyId(3) // detect all branches
+                        strategyId(1) // detect all branches except PR
                     }
                 }
             }
