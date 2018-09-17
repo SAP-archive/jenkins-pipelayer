@@ -23,8 +23,6 @@ private insureNoShebang(fileContent) {
 
 private processTemplate(file, localPath) {
     def properties = readProperties file: file.path
-    println file.path
-    println properties
     if (!properties['jenkins.job.template']) {
         throw new NoTemplateException()
     }
@@ -102,8 +100,8 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
         }
 
         arrFiles << [
-            name: name || parser.getBaseName(file.name),
-            content: config.withContent || config.useTemplate ? fileContent : '',
+            name: name ?: parser.getBaseName(file.name),
+            content: config.withContent ?: (config.useTemplate ? fileContent : ''),
             path: filePath,
             displayName: parser.getDisplayName(fileContent),
             description: parser.getDescription(fileContent, filePath),
