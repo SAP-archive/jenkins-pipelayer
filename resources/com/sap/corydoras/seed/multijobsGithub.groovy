@@ -11,7 +11,7 @@
 def githubApiUri = 'http://github.wdf.sap.corp/api/v3'
 def gitRemoteUrlArray = gitRemoteUrl.split('/')
 def repoOwner = gitRemoteUrlArray[-2]
-def repository = gitRemoteUrlArray[-1]​.replaceAll(/\.git$/, '')​​​​​​​​​​​​​​​​​​​​​​​​
+def repository = gitRemoteUrlArray[-1].replaceAll(/\.git$/, '')
 
 pipelineJobs.each { file ->
     try {
