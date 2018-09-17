@@ -56,6 +56,7 @@ def call(body) {
     def path = ''
 
     def resourcesDestination = ''
+    def destination = config.destination ?: ''
 
     if (!config.path) {
         path = config.useTemplate ? 'config/*.properties' : 'jobs/**/*.groovy'
@@ -75,7 +76,7 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
     
     //copy src to jenkins
     if (config.copySrc) {
-        resourcesDestination = "$JENKINS_HOME/job_resources/$destination"
+        resourcesDestination = "$JENKINS_HOME/job_resources/${destination}"
         sh "mkdir -p $resourcesDestination"
         sh "cp -r * $resourcesDestination"
     }
@@ -125,7 +126,7 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
             additionalParameters: [
                 pipelineJobs: arrFiles,
                 props: [
-                    basePath: config.destination ?: '',
+                    basePath: destination,
                     gitRemoteUrl: config.gitRemoteUrl,
                     gitConfigJenkinsBranch: config.gitConfigJenkinsBranch,
                     localPath: config.localPath ?: ''
