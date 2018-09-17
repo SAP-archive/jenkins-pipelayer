@@ -83,7 +83,6 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
         def name = null
         def filePath = null
         def fileContent = ''
-        def fileDescription = []
 
         if (config.useTemplate) {
             try {
@@ -98,19 +97,20 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
             filePath = file.path
             fileContent = sh returnStdout: true, script: "cat ${filePath}"
         }
-
-        arrFiles << [
-            name: name ?: parser.getBaseName(file.name),
-            content: config.withContent ?: (config.useTemplate ? fileContent : ''),
-            path: filePath,
-            displayName: parser.getDisplayName(fileContent),
-            description: parser.getDescription(fileContent, filePath),
-            triggers: parser.getTriggers(fileContent, filePath),
-            parameters: parser.getParameters(fileContent, filePath),
-            authorizations: parser.getAuthorizations(fileContent, filePath),
-            environmentVariables: parser.getEnvironmentVariables(fileContent, filePath),
-            author: sh(returnStdout: true, script: "git log --format=%an ${filePath} | tail -1").trim()
-        ]
+        if (filePath && fileContent) {
+            arrFiles << [
+                name: name ?: parser.getBaseName(file.name),
+                content: config.withContent ?: (config.useTemplate ? fileContent : ''),
+                path: filePath,
+                displayName: parser.getDisplayName(fileContent),
+                description: parser.getDescription(fileContent, filePath),
+                triggers: parser.getTriggers(fileContent, filePath),
+                parameters: parser.getParameters(fileContent, filePath),
+                authorizations: parser.getAuthorizations(fileContent, filePath),
+                environmentVariables: parser.getEnvironmentVariables(fileContent, filePath),
+                author: sh(returnStdout: true, script: "git log --format=%an ${filePath} | tail -1").trim()
+            ]
+        }
     }
 
     def targetFile = 'seed/jobs.groovy'
