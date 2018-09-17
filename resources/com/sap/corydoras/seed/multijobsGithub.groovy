@@ -10,7 +10,7 @@
 
 def githubApiUri = 'http://github.wdf.sap.corp/api/v3'
 def gitRemoteUrlArray = props.gitRemoteUrl.split('/')
-def repoOwner = gitRemoteUrlArray[-2].replaceAll(/\.git$/, '')
+def repoOwner = gitRemoteUrlArray[-2][0]
 def repository = gitRemoteUrlArray[-1].replaceAll(/\.git$/, '')
 
 pipelineJobs.each { file ->
