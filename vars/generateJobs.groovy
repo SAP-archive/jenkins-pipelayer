@@ -87,9 +87,6 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
     }
 
     findFiles(glob: path).each { file ->
-        def name = null
-        def fileContent = ''
-
         if (config.useTemplate) {
             try {
                 def localPath = config.localPath
@@ -98,25 +95,24 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
                     throw new NoTemplateException()
                 }
                 findFiles(glob: properties['jenkins.job.template']).each { fileTemplate ->
-
                     def fileContent = sh returnStdout: true, script: "cat ${fileTemplate.path}"
                     properties.each { key, value ->
                         fileContent = fileContent.replace(/{{${key}}}/, value)
                     }
-                    // note: we comment the first line in case a shebang is present
-                    fileContent = infoMessage(localPath, fileTemplate.path, file.path) + insureNoShebang(fileContent)
-                    name = properties['jenkins.job.name']
                     if (resourcesDestination) {
                         fileContent = fileContent.replace(/{{sources.directory}}/, resourcesDestination)
                     }
+                    // note: we comment the first line in case a shebang is present
+                    fileContent = infoMessage(localPath, fileTemplate.path, file.path) + insureNoShebang(fileContent)
+                    def name = properties['jenkins.job.name']
                     arrFiles << fileDescription(parser, name, config, fileContent, fileTemplate)
                 }
             } catch (NoTemplateException exception) {
                 println "You did not specify a template in $file.path, pass"
             }
         } else {
-            fileContent = sh returnStdout: true, script: "cat ${file.path}"
-            arrFiles << fileDescription(parser, name, config, fileContent, file)
+            def fileContent = sh returnStdout: true, script: "cat ${file.path}"
+            arrFiles << fileDescription(parser, null, config, fileContent, file)
         }
     }
 
