@@ -76,13 +76,6 @@ Usage:
 
 - **localPath**: the process working directory. ie: your jobs are in a folder ./devops/config and you execute this step from within a ./devops/Jenkinsfile
 
-```groovy
-script {
-    commit = checkout scm
-}
-generateJobsMultiSources 'jobs/**/*.groovy', 'pipelines', commit, additionalParameters: [ copySrc: true ]
-```
-
 **Note:** you will certainly have to approve the generated scripts in *Manage Jenkins -> In-process Script Approval*
 
 ## Template Engine
