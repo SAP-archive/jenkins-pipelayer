@@ -71,7 +71,7 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
         return
     }
     config.gitConfigJenkinsBranch = config.gitConfigJenkinsBranch.replaceAll(/^origin\//, '')
-    
+
     //copy src to jenkins
     if (config.copySrc) {
         resourcesDestination = "$JENKINS_HOME/job_resources/${destination}"
@@ -97,10 +97,22 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
             filePath = file.path
             fileContent = sh returnStdout: true, script: "cat ${filePath}"
         }
+
         if (filePath && fileContent) {
+            if (!name) {
+                variableGetJobName = parser.getJobName(fileContent)
+                if (variableGetJobName) {
+                    name = variableGetJobName
+                } else {
+                    if (file.name == 'Jenkinsfile') {
+                         name = file.path.split('/')[-2]
+                    } else {
+                        name = parser.getBaseName(file.name)
+                    }
+                }
+            }
             arrFiles << [
-                //name from property template or from within job or filename
-                name: name ?: (parser.getJobName(fileContent) ?: parser.getBaseName(file.name)),
+                name: name,
                 content: config.withContent ?: (config.useTemplate ? fileContent : ''),
                 path: filePath,
                 displayName: parser.getDisplayName(fileContent),
