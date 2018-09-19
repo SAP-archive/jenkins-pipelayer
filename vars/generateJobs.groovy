@@ -32,7 +32,6 @@ def fileDescription(parser, name, config, fileContent, file) {
             } else {
                 name = parser.getBaseName(file.name)
             }
-            name = name.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
         }
     }
     return [
