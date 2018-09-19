@@ -8,7 +8,6 @@ This Jenkins Library introduces new ways to import jobs programmatically into je
 
  - Pipeline Jobs generated from a folder containing declarative pipelines
  - Pipeline Jobs from configuration files and templates
- - Multibranch Pipeline Jobs from sub folders containing Jenkinsfile
 
 
 ## How it works
@@ -35,19 +34,6 @@ method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object
 ```
 
 ## Usage
-
-### generateMultiPipeline
-
-To generate pipeline jobs from multiple files `Jenkinsfile` located in subfolders, run `generateMultiPipeline`
-
-```groovy
-script {
-    commit = checkout scm
-}
-generateMultipipeline commit
-```
-
-### generateJobs
 
 To generate jobs from jobs or templates configuration files, use `generateJobs`.
 
@@ -118,18 +104,9 @@ jenkins.job.pipeline=templates/my-dummy-job.groovy
 
 you can also set `jenkins.job.destination` to import the job with name `jenkins.job.name` to folder `jenkins.job.destination`
 
-## Multipipeline
-
-Now you generate jobs, from Jenkinsfile in subfolders, with method `generateMultipipeline`, you can trigger only the job that got new changes with method `triggerOnChanges`
-
-```
-generateMultipipeline commit
-triggerOnChanges this
-```
 
 ## Known limitations
 
- - Pipeline keyword `jobDsl` is called, therefore you cannot cummulate multiple generation methods within the same job.
-   Workaround if you call corydoras generation methods from within a Jenkins file is to condition depending on branches.
+ - Pipeline keyword `jobDsl` is called, therefore you cannot cummulate multiple time the generation step within the same job
  - Don't execute these methods on a docker. A jenkins workspace must exist. This lib uses `writeFile` pipeline keyword
 
