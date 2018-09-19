@@ -12,6 +12,10 @@ class ParserSpec extends Specification {
         expect:
             parser.extractBlock('dummyBlock', scriptContent) == "\n        dummy = 'dummy'\n    "
     }
+    def 'correctly parse jobName'() {
+        expect:
+            parser.getjobName(scriptContent) == 'dummy script'
+    }
     def 'correctly parse displayName'() {
         expect:
             parser.getDisplayName(scriptContent) == 'dummy script'

@@ -99,7 +99,8 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
         }
         if (filePath && fileContent) {
             arrFiles << [
-                name: name ?: parser.getBaseName(file.name),
+                //name from property template or from within job or filename
+                name: name ?: (parser.getJobName(fileContent) ?: parser.getBaseName(file.name)),
                 content: config.withContent ?: (config.useTemplate ? fileContent : ''),
                 path: filePath,
                 displayName: parser.getDisplayName(fileContent),

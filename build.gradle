@@ -3,6 +3,7 @@
 plugins {
     id 'groovy'
     id 'codenarc'
+    id 'com.adarshr.test-logger' version '1.5.0'
 }
 
 description='''
@@ -40,8 +41,8 @@ repositories {
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.13'
     compile 'com.cloudbees:groovy-cps:1.24'
-    testCompile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
-    testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+    testCompile 'org.slf4j:slf4j-simple:1.6.1'
+    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
 }
 
 allprojects {
@@ -52,8 +53,10 @@ allprojects {
     }
 }
 
-test {
-    systemProperty 'env', System.getProperty('env')
+testlogger {
+    showStandardStreams true
+    showPassed false
+    showSummary false
 }
 
 task wrapper(type: Wrapper) {

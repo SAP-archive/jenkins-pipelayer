@@ -47,26 +47,34 @@ script {
 generateMultipipeline commit
 ```
 
-### generateJobsMultiSources
+### generateJobs
 
-To generate jobs from jobs or templates configuration files, use `generateJobsMultiSources`.
+To generate jobs from jobs or templates configuration files, use `generateJobs`.
 
 Usage:
 
 ```groovy
-    generateJobsMultiSources path, destination, commit, additionalParameters
+    generateJobs {
+        path = 'jobs/**/*.groovy'
+        destination = 'auto-piplines'
+        gitConfigJenkinsBranch = 'master'
+        gitRemoteUrl = 'git-uri'
+    }
 ```
 
-- **path**: path to your files (either jobs or templates configuration files)
+- **path**: path to your files (either jobs or templates configuration files) [defaults: 'config/*.properties' for templates otherwise 'jobs/**/*.groovy']
 
-- **destination**: where to create the jobs
+- **destination**: where to create the jobs. empty is at jenkins root, if not, will create a folder
 
-- **commit**: commit info
+- **gitConfigJenkinsBranch**: commit info
 
-- **additionalParameters**:
-    - useTemplate: specifies wether you want to use templates. If so, it will process files in `config/*.properties` by default.
-    - withContent: specifies wether you want to use your files contents as groovy scripts for the jobs. If not set, groovy scripts will be fetched from GitHub when running the jobs. This parameter is useless if you use templates.
-    - copySrc: specifies wheter you want to copy your project's files to Jenkins. If yes, files will be copied to `$JENKINS_HOME/job_resources/{{destination}}`
+- **useTemplate**: specifies wether you want to use templates. If so, it will process files in `config/*.properties` by default.
+
+- **withContent**: specifies wether you want to use your files contents as groovy scripts for the jobs. If not set, groovy scripts will be fetched from GitHub when running the jobs. This parameter is useless if you use templates.
+
+- **copySrc**: specifies wheter you want to copy your project's files to Jenkins. If yes, files will be copied to `$JENKINS_HOME/job_resources/{{destination}}`
+
+- **localPath**: the process working directory. ie: your jobs are in a folder ./devops/config and you execute this step from within a ./devops/Jenkinsfile
 
 ```groovy
 script {

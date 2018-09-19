@@ -38,17 +38,36 @@ class Parser {
     }
 
     /**
-     * extract displayName
+     * extract within a text, a variable of the form //@variable
+     * @param  variableName  the string to extract
      * @param  content  content with/without displayName
      * @return          the display Name or empty string
      */
-    def getDisplayName(content) {
-        def pattern = /(?im)^\/\/@displayName *= */ //case insensitive
+    def getCommentedVariable(variableName, content) {
+        def pattern = /(?im)^\/\/@${variableName} *= */ //case insensitive
         try {
             return content.find(pattern + /(.*)$/).replaceAll(pattern, '')
         } catch (Exception ex) {
             return ''
         }
+    }
+
+    /**
+     * extract displayName
+     * @param  content  content with/without displayName
+     * @return          the display Name or empty string
+     */
+    def getDisplayName(String content) {
+        getCommentedVariable('displayName', content)
+    }
+
+    /**
+     * extract jobName
+     * @param  content  content with/without jobName
+     * @return          the job Name, the one which would be given to access the job or empty string
+     */
+    def getJobName(String content) {
+        getCommentedVariable('jobName', content)
     }
 
     /**
