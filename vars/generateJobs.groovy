@@ -119,6 +119,8 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
     def targetFile = 'seed/jobs.groovy'
     def jobDefinition = libraryResource "com/sap/corydoras/${targetFile}"
     writeFile file: targetFile, text: jobDefinition
+    
+    println arrFiles
 
     jobDsl removedJobAction: 'DELETE',
             removedViewAction: 'DELETE',
