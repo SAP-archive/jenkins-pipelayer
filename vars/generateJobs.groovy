@@ -21,25 +21,32 @@ private insureNoShebang(fileContent) {
     }
 }
 
-private processTemplate(file, localPath) {
-    def properties = readProperties file: file.path
-    if (!properties['jenkins.job.template']) {
-        throw new NoTemplateException()
+def fileDescription(parser, name, config, fileContent, file) {
+    if (!name) {
+        variableGetJobName = parser.getJobName(fileContent)
+        if (variableGetJobName) {
+            name = variableGetJobName
+        } else {
+            if (file.name == 'Jenkinsfile') {
+                name = file.path.split('/')[-2]
+            } else {
+                name = parser.getBaseName(file.name)
+            }
+            name = name.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
+        }
     }
-    def filePath = properties['jenkins.job.template']
-    def fileContent = sh returnStdout: true, script: "cat ${filePath}"
-    properties.each { key, value ->
-        fileContent = fileContent.replace(/{{${key}}}/, value)
-    }
-
-    // note: we comment the first line in case a shebang is present
-    fileContent = infoMessage(localPath, filePath, file.path) + insureNoShebang(fileContent)
-    def fileName = properties['jenkins.job.name']
-    if (!fileName) {
-        fileName = filePath.replaceFirst(~/\.[^\.]+$/, '').split('/')[-1]
-    }
-
-    return [filePath, fileName, fileContent]
+    return [
+        name: name,
+        content: config.withContent ?: (config.useTemplate ? fileContent : ''),
+        path: file.path,
+        displayName: parser.getDisplayName(fileContent),
+        description: parser.getDescription(fileContent, file.path),
+        triggers: parser.getTriggers(fileContent, file.path),
+        parameters: parser.getParameters(fileContent, file.path),
+        authorizations: parser.getAuthorizations(fileContent, file.path),
+        environmentVariables: parser.getEnvironmentVariables(fileContent, file.path),
+        author: sh(returnStdout: true, script: "git log --format=%an ${file.path} | tail -1").trim()
+    ]
 }
 
 def call(body) {
@@ -81,48 +88,35 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
 
     findFiles(glob: path).each { file ->
         def name = null
-        def filePath = null
         def fileContent = ''
 
         if (config.useTemplate) {
             try {
-                (filePath, name, fileContent) = processTemplate(file, config.localPath)
-                if (resourcesDestination) {
-                    fileContent = fileContent.replace(/{{sources.directory}}/, resourcesDestination)
+                def localPath = config.localPath
+                def properties = readProperties file: file.path
+                if (!properties['jenkins.job.template']) {
+                    throw new NoTemplateException()
+                }
+                findFiles(glob: properties['jenkins.job.template']).each { fileTemplate ->
+
+                    def fileContent = sh returnStdout: true, script: "cat ${fileTemplate.path}"
+                    properties.each { key, value ->
+                        fileContent = fileContent.replace(/{{${key}}}/, value)
+                    }
+                    // note: we comment the first line in case a shebang is present
+                    fileContent = infoMessage(localPath, fileTemplate.path, file.path) + insureNoShebang(fileContent)
+                    name = properties['jenkins.job.name']
+                    if (resourcesDestination) {
+                        fileContent = fileContent.replace(/{{sources.directory}}/, resourcesDestination)
+                    }
+                    arrFiles << fileDescription(parser, name, config, fileContent, fileTemplate)
                 }
             } catch (NoTemplateException exception) {
                 println "You did not specify a template in $file.path, pass"
             }
         } else {
-            filePath = file.path
-            fileContent = sh returnStdout: true, script: "cat ${filePath}"
-        }
-
-        if (filePath && fileContent) {
-            if (!name) {
-                variableGetJobName = parser.getJobName(fileContent)
-                if (variableGetJobName) {
-                    name = variableGetJobName
-                } else {
-                    if (file.name == 'Jenkinsfile') {
-                         name = file.path.split('/')[-2]
-                    } else {
-                        name = parser.getBaseName(file.name)
-                    }
-                }
-            }
-            arrFiles << [
-                name: name,
-                content: config.withContent ?: (config.useTemplate ? fileContent : ''),
-                path: filePath,
-                displayName: parser.getDisplayName(fileContent),
-                description: parser.getDescription(fileContent, filePath),
-                triggers: parser.getTriggers(fileContent, filePath),
-                parameters: parser.getParameters(fileContent, filePath),
-                authorizations: parser.getAuthorizations(fileContent, filePath),
-                environmentVariables: parser.getEnvironmentVariables(fileContent, filePath),
-                author: sh(returnStdout: true, script: "git log --format=%an ${filePath} | tail -1").trim()
-            ]
+            fileContent = sh returnStdout: true, script: "cat ${file.path}"
+            arrFiles << fileDescription(parser, name, config, fileContent, file)
         }
     }
 
