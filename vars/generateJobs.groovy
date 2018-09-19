@@ -33,6 +33,8 @@ def fileDescription(parser, name, config, fileContent, file) {
                 name = parser.getBaseName(file.name)
             }
         }
+    } else if (file.name == 'Jenkinsfile') {
+        name = "${file.path.split('/')[-2]}-${name}"
     }
     return [
         name: name,
