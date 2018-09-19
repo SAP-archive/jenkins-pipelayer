@@ -37,6 +37,22 @@ class Parser {
         extract.substring(firstPosition, position)
     }
 
+    def extractFirstComment(extract) {
+        def firstPosition = extract.indexOf('/') + 1
+        def position = firstPosition
+        def openBracketCounter = 1
+        while (openBracketCounter) {
+            if (extract[position] == '/') {
+                openBracketCounter++
+            } else if (extract[position] == '\\') {
+                openBracketCounter--
+            }
+            if (openBracketCounter == 0 || position == extract.size() - 1) break
+            position++
+        }
+        def result = extract.substring(firstPosition, position - 1)
+        return (result[0] == '*' && result[-1] == '*') ? result.substring(1, result.size() -1) : ''
+    }
     /**
      * extract within a text, a variable of the form //@variable
      * @param  variableName  the string to extract
@@ -79,13 +95,7 @@ class Parser {
      */
     def getDescription(content, filePath) {
         try {
-            def description = ''
-            def descriptionPattern = /(?m)\/\*([\S\s]+?)\*\//
-            def descriptionMatcher = content =~ descriptionPattern
-            if (descriptionMatcher.find()) {
-                description = descriptionMatcher.group(1)
-            }
-            return description.trim().replaceAll(/>\s*\n\s*/, '>\n').replaceAll(/(?<!>)\s*\n\s*/, '<br>\n')
+            extractFirstComment(content).trim().replaceAll(/>\s*\n\s*/, '>\n').replaceAll(/(?<!>)\s*\n\s*/, '<br>\n')
         } catch (Exception ex) {
             println 'could not extract description for file ' + filePath
             println ex
