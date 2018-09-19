@@ -22,9 +22,6 @@ pipelineJobs.each { file ->
                 periodic(1)
             }
             branchSources {
-                git {
-                    remote(props.gitRemoteUrl)
-                }
                 github {
                     apiUri(githubApiUri)
                     buildOriginBranchWithPR(false)
