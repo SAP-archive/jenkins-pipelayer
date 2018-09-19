@@ -133,7 +133,7 @@ class Parser {
                 extract.split(/\s*?\n/).each { line ->
                     if (line.indexOf('=') != -1) {
                         def attrKeyValue = line.trim().split(/=/)
-                        textScript += "env('${attrKeyValue[0]}', ${attrKeyValue[1]})\n"
+                        textScript += "env('${attrKeyValue[0]}', ${attrKeyValue[1].replace('$', '\\\\$')})\n"
                     }
                 }
             }
