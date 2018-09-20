@@ -32,13 +32,13 @@ pipelineJobs.each { file ->
             jobPath = "${basePath}/${jobPath}"
             if (file.folder) {
                 folder("${basePath}/${file.folder}") {
-                    description file.folderDescription ?: "generated folder"
+                    description file.folderDescription ?: 'generated folder'
                 }
                 jobPath = "${basePath}/${file.folder}/${jobPath}"
             }
         } else if (file.folder) {
             folder(file.folder) {
-                description file.folderDescription ?: "generated folder"
+                description file.folderDescription ?: 'generated folder'
             }
             jobPath = "${file.folder}/${jobPath}"
         }

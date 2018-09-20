@@ -30,7 +30,7 @@ def fileDescription(parser, config, fileContent, file, propsName, propsFolder, p
             name = variableGetJobName
         } else {
             if (file.name == 'Jenkinsfile') {
-                name = file.path.split('/')[-2]
+                name = file.path.replace('/', '-') - ~/\/Jenkinsfile$/
             } else {
                 name = parser.getBaseName(file.name)
             }
