@@ -30,13 +30,22 @@ pipelineJobs.each { file ->
         def jobPath = file.name
         if (basePath != '') {
             jobPath = "${basePath}/${jobPath}"
+            if (file.folder) {
+                folder("${basePath}/${file.folder}") {
+                    description file.folderDescription ?: "generated folder"
+                }
+                jobPath = "${basePath}/${file.folder}/${jobPath}"
+            }
+        } else if (file.folder) {
+            folder(file.folder) {
+                description file.folderDescription ?: "generated folder"
+            }
+            jobPath = "${file.folder}/${jobPath}"
         }
         pipelineJob(jobPath) {
-
             if (file.displayName){
                 displayName "${file.displayName}"
             }
-
             //here we force job to get a description
             description "${file.description}"
 

@@ -21,8 +21,10 @@ private insureNoShebang(fileContent) {
     }
 }
 
-def fileDescription(parser, name, config, fileContent, file) {
-    if (!name) {
+def fileDescription(parser, config, fileContent, file, properties) {
+    if (properties['jenkins.job.name']) {
+        name = properties['jenkins.job.name']
+    } else {
         variableGetJobName = parser.getJobName(fileContent)
         if (variableGetJobName) {
             name = variableGetJobName
@@ -33,11 +35,11 @@ def fileDescription(parser, name, config, fileContent, file) {
                 name = parser.getBaseName(file.name)
             }
         }
-    } else if (file.name == 'Jenkinsfile') {
-        name = "${file.path.split('/')[-2]}-${name}"
     }
     return [
         name: name,
+        folder: properties['jenkins.job.folder'],
+        folderDescription: properties['jenkins.job.folder.description'],
         content: config.withContent ?: (config.useTemplate ? fileContent : ''),
         path: file.path,
         displayName: parser.getDisplayName(fileContent),
@@ -105,15 +107,14 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
                     }
                     // note: we comment the first line in case a shebang is present
                     fileContent = infoMessage(localPath, fileTemplate.path, file.path) + insureNoShebang(fileContent)
-                    def name = properties['jenkins.job.name']
-                    arrFiles << fileDescription(parser, name, config, fileContent, fileTemplate)
+                    arrFiles << fileDescription(parser, config, fileContent, fileTemplate, properties)
                 }
             } catch (NoTemplateException exception) {
                 println "You did not specify a template in $file.path, pass"
             }
         } else {
             def fileContent = sh returnStdout: true, script: "cat ${file.path}"
-            arrFiles << fileDescription(parser, null, config, fileContent, file)
+            arrFiles << fileDescription(parser, config, fileContent, file, properties)
         }
     }
 
