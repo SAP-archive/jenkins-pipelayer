@@ -1,0 +1,86 @@
+#!/usr/bin/env groovy
+
+//#!/usr/bin/env groovy
+@Library(['piper-lib', 'piper-lib-os' , 'ipa-library']) _
+
+pipeline {
+    environment {
+        CF_SPACE = 'integration'
+        CF_ORG = 'IPA_Dev'
+        OWNER = 'integration'
+        CF_SUB_ACCOUNT = 'dev'
+        CF_SUB_ID = 'f96feccd-e3c9-4ee2-acb0-f5876d8a4593'
+        CF_SUB_DOMAIN = 'dev-ipa'
+        SERVICE_NAME = 'com.sap.ipa.approuter'
+    }
+
+    agent {
+        kubernetes {
+            label "${UUID.randomUUID().toString()}"
+            defaultContainer 'jnlp'
+            yaml '''
+                apiVersion: v1
+                kind: Pod
+                spec:
+                  containers:
+                  - name: jnlp
+                    image: docker.wdf.sap.corp:51021/sap-production/jnlp:3.7-1-alpine
+                    args:
+                    - ${computer.jnlpmac} ${computer.name}
+                    tty: true
+                  - name: docker
+                    image: docker.wdf.sap.corp:50000/ipa/devops:latest
+                    tty: true
+                    command:
+                     - cat
+            '''
+        }
+    }
+    options {
+        ansiColor('xterm')
+        buildDiscarder(logRotator(numToKeepStr: '100', artifactNumToKeepStr: '20'))
+        timeout(time: 2, unit: 'HOURS')
+        timestamps()
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage('fetch') {
+            steps {
+                container('docker') {
+                    git url: 'https://github.wdf.sap.corp/ML-Leonardo/ML-IPA.git', branch: 'master'
+                }
+            }
+        }
+
+        stage('Compilation') {
+            steps {
+                container('docker') {
+                    sh "mvn clean install -f pom.xml -s settings.xml -pl services/${SERVICE_NAME}"
+                }
+            }
+        }
+
+        stage('CF Init') {
+            when { branch 'master' }
+            steps {
+                container('docker') {
+                    cfLogin("CF_AUTO","${CF_ORG}","${CF_SPACE}")
+                    cfInitServices("${CF_SPACE}","${CF_SUB_ACCOUNT}")
+                }
+            }
+        }
+
+        stage('CF Push') {
+            when { branch 'master' }
+            steps {
+                container('docker') {
+                    dir("${env.workspace}/services/${SERVICE_NAME}"){
+                        cfPush("${OWNER}","${CF_SUB_DOMAIN}")
+                    }
+                }
+            }
+        }
+    }
+}
