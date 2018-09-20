@@ -34,7 +34,7 @@ private jobsToTrigger() {
 }
 
 @NonCPS
-private scanRepo(String downStreamProjectName) {
+private scheduleBuild(String downStreamProjectName) {
     Jenkins.instance.getItemByFullName(downStreamProjectName).scheduleBuild()
 }
 
@@ -44,10 +44,6 @@ def call(jenkinsContext, folder = '', multibranch = false) {
             job = "${folder}/${job}"
         }
         jenkinsContext.println "build job ${job}"
-        if (multibranch) {
-            scanRepo(job)
-        } else {
-            build job: job, propagate: false
-        }
+        scheduleBuild(job)
     }
 }
