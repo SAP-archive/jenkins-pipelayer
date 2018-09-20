@@ -42,23 +42,16 @@ class Parser {
         def position = firstPosition
         def openBracketCounter = 1
         def extractSize = extract.size()
-        def gotComment = 0
         while (openBracketCounter) {
             if (extract[position] == '/' && position + 1 < extractSize && extract[position + 1] == '*') {
                 openBracketCounter++
-                if (gotComment == 0 ) {
-                    gotComment = 1
-                }
             } else if (extract[position - 1] == '*' && extract[position] == '/') {
                 openBracketCounter--
-                if (gotComment == 1 ) {
-                    gotComment = 2
-                }
             }
             if (openBracketCounter == 0 || position == extract.size() - 1) break
             position++
         }
-        return gotComment == 2 ? extract.substring(firstPosition, position - 1).trim() : ''
+        return extractSize == position ? '' : extract.substring(firstPosition, position - 1).trim()
     }
     /**
      * extract within a text, a variable of the form //@variable
