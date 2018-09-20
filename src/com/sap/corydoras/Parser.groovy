@@ -38,20 +38,20 @@ class Parser {
     }
 
     def extractFirstComment(extract) {
-        def firstPosition = extract.indexOf('/') + 1
+        def firstPosition = extract.indexOf('/*') + 2
         def position = firstPosition
         def openBracketCounter = 1
+        def extractSize = extract.size()
         while (openBracketCounter) {
-            if (extract[position] == '/') {
+            if (extract[position] == '/' && position + 1 < extractSize && extract[position + 1] == '*') {
                 openBracketCounter++
-            } else if (extract[position] == '\\') {
+            } else if (extract[position - 1] == '*' && extract[position] == '/') {
                 openBracketCounter--
             }
             if (openBracketCounter == 0 || position == extract.size() - 1) break
             position++
         }
-        def result = extract.substring(firstPosition, position - 1)
-        return (result[0] == '*' && result[-1] == '*') ? result.substring(1, result.size() -1) : ''
+        return extract.substring(firstPosition, position - 1).trim()
     }
     /**
      * extract within a text, a variable of the form //@variable
@@ -95,7 +95,9 @@ class Parser {
      */
     def getDescription(content, filePath) {
         try {
-            extractFirstComment(content).trim().replaceAll(/>\s*\n\s*/, '>\n').replaceAll(/(?<!>)\s*\n\s*/, '<br>\n')
+            def x = extractFirstComment(content).trim().replaceAll(/>\s*\n\s*/, '>\n').replaceAll(/(?<!>)\s*\n\s*/, '<br>\n')
+            println x
+            x
         } catch (Exception ex) {
             println 'could not extract description for file ' + filePath
             println ex
