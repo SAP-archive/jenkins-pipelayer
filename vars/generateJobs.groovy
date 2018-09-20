@@ -21,6 +21,7 @@ private insureNoShebang(fileContent) {
     }
 }
 
+@NonCPS
 def fileDescription(parser, config, fileContent, file, properties) {
     if (properties['jenkins.job.name']) {
         name = properties['jenkins.job.name']
