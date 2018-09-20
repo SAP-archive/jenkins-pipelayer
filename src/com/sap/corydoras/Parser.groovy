@@ -52,7 +52,7 @@ class Parser {
             if (openBracketCounter == 0 || position == extract.size() - 1) break
             position++
         }
-        return (extractSize == position || position == 0) ? '' : extract.substring(firstPosition, position - 1).trim()
+        return (extractSize -1 == position || position == 0) ? '' : extract.substring(firstPosition, position - 1).trim()
     }
     /**
      * extract within a text, a variable of the form //@variable
