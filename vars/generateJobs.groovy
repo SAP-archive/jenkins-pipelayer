@@ -36,10 +36,12 @@ def fileDescription(parser, config, fileContent, file, propsName, propsFolder, p
             }
         }
     }
+    def existingJob = Jenkins.instance.getItemByFullName(propsFolder ? "${propsFolder}/${name}" : name)
     return [
         name: name,
         folder: propsFolder,
         folderDescription: propsFolderDescription,
+        isDisabled: existingJob ? existingJob.disabled : false,
         content: config.withContent ?: (config.useTemplate ? fileContent : ''),
         path: file.path,
         displayName: parser.getDisplayName(fileContent),

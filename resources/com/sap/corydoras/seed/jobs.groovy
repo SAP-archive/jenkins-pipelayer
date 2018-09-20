@@ -46,9 +46,8 @@ pipelineJobs.each { file ->
             if (file.displayName){
                 displayName "${file.displayName}"
             }
-            //here we force job to get a description
             description "${file.description}"
-
+            disabled(file.isDisabled)
             if (file.parameters) {
                 parameters evaluate(file.parameters)
             }
