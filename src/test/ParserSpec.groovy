@@ -14,7 +14,7 @@ class ParserSpec extends Specification {
     }
     def 'correctly parse jobName'() {
         expect:
-            parser.getjobName(scriptContent) == 'dummy script'
+            parser.getJobName(scriptContent) == 'dummy script'
     }
     def 'correctly parse displayName'() {
         expect:
