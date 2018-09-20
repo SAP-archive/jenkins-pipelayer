@@ -106,7 +106,9 @@ pipelineJobs.each { file ->
             }
         }
     } catch (Exception err) {
-        println "Error with file ${file.path}"
         println err
+        if (file.path) {
+            println "Error occured when processing file ${file.path}"
+        }
     }
 }

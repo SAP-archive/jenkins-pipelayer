@@ -21,10 +21,9 @@ private insureNoShebang(fileContent) {
     }
 }
 
-@NonCPS
-def fileDescription(parser, config, fileContent, file, properties) {
-    if (properties['jenkins.job.name']) {
-        name = properties['jenkins.job.name']
+def fileDescription(parser, config, fileContent, file, propsName, propsFolder, propsFolderDescription) {
+    if (propsName) {
+        name = propsName
     } else {
         variableGetJobName = parser.getJobName(fileContent)
         if (variableGetJobName) {
@@ -39,8 +38,8 @@ def fileDescription(parser, config, fileContent, file, properties) {
     }
     return [
         name: name,
-        folder: properties['jenkins.job.folder'],
-        folderDescription: properties['jenkins.job.folder.description'],
+        folder: propsFolder,
+        folderDescription: propsFolderDescription,
         content: config.withContent ?: (config.useTemplate ? fileContent : ''),
         path: file.path,
         displayName: parser.getDisplayName(fileContent),
@@ -108,14 +107,14 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
                     }
                     // note: we comment the first line in case a shebang is present
                     fileContent = infoMessage(localPath, fileTemplate.path, file.path) + insureNoShebang(fileContent)
-                    arrFiles << fileDescription(parser, config, fileContent, fileTemplate, properties)
+                    arrFiles << fileDescription(parser, config, fileContent, fileTemplate, properties['jenkins.job.name'], properties['jenkins.job.folder'], properties['jenkins.job.folder.description'])
                 }
             } catch (NoTemplateException exception) {
                 println "You did not specify a template in $file.path, pass"
             }
         } else {
             def fileContent = sh returnStdout: true, script: "cat ${file.path}"
-            arrFiles << fileDescription(parser, config, fileContent, file, properties)
+            arrFiles << fileDescription(parser, config, fileContent, file, null, null, null)
         }
     }
 
