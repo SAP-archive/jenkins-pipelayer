@@ -122,8 +122,6 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
     def jobDefinition = libraryResource "com/sap/corydoras/${targetFile}"
     writeFile file: targetFile, text: jobDefinition
     
-    println arrFiles
-
     jobDsl removedJobAction: 'DELETE',
             removedViewAction: 'DELETE',
             targets: targetFile,
