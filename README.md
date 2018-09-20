@@ -10,16 +10,6 @@ This Jenkins Library introduces new ways to import jobs programmatically into je
  - Pipeline Jobs from configuration files and templates
 
 
-## How it works
-
-Uses JobDSL to generate pipelines with checkout from scm.
-
-The seeds are in `resources` folder.
-
-To help you understand this project, [we made a sample](https://github.wdf.sap.corp/devops-ci/corydoras-sample/)
-
-To understand how jobdsl works [have a look at the documentation](https://github.com/jenkinsci/job-dsl-plugin/wiki/Tutorial---Using-the-Jenkins-Job-DSL). You could also go see the [jobdsl api documentation](https://jenkinsci.github.io/job-dsl-plugin/)
-
 ## Requirements
 
 Import the library in Jenkins. From __Manage__ page, go to __Configure System__
@@ -33,7 +23,7 @@ approve from page __In Process Script Approval__:
 method groovy.lang.GroovyObject invokeMethod java.lang.String java.lang.Object
 ```
 
-## Usage
+## Pipeline step usage
 
 To generate jobs from jobs or templates configuration files, use `generateJobs`.
 
@@ -41,18 +31,17 @@ Usage:
 
 ```groovy
     generateJobs {
-        path = 'jobs/**/*.groovy'
-        destination = 'auto-piplines'
         gitConfigJenkinsBranch = 'master'
         gitRemoteUrl = 'git-uri'
     }
 ```
+- **gitConfigJenkinsBranch** [mandatory]: the branch on which the jobs are located
+
+- **gitRemoteUrl** [mandatory]: the url to the repository is used to set the project url property of the job. This set Github link in jenkins menu to redirect to the repository
 
 - **path**: path to your files (either jobs or templates configuration files) [defaults: 'config/*.properties' for templates otherwise 'jobs/**/*.groovy']
 
 - **destination**: where to create the jobs. empty is at jenkins root, if not, will create a folder
-
-- **gitConfigJenkinsBranch**: commit info
 
 - **useTemplate**: specifies wether you want to use templates. If so, it will process files in `config/*.properties` by default.
 
@@ -90,7 +79,7 @@ pipeline {
 ### Use the template
 
 Create or modify a property file in `config` folder.
-Set property `jenkins.job.pipeline` to the pipeline template you want to use.
+Set property `jenkins.job.template` to the pipeline template you want to use.
 Set a name for the job with property `jenkins.job.name`
 
 
@@ -104,6 +93,22 @@ jenkins.job.pipeline=templates/my-dummy-job.groovy
 
 you can also set `jenkins.job.destination` to import the job with name `jenkins.job.name` to folder `jenkins.job.destination`
 
+`jenkins.job.template` also supports ant pattern to get multiple files.
+If there are multiple files, `jenkins.job.name` won't be used.
+An other method to set a job name is to write a comment as follow in the pipeline file:
+`//@jobName=my-generated-job`
+you can also act on the display name of the job with:
+`//@DisplayName=my cool name`
+
+## How it is made possible
+
+Corydoras uses JobDSL to create pipelines jobs from declarative pipelines
+
+The JobDSK seed is located in `resources` folder.
+
+To help you understand this project, [we made a sample](https://github.wdf.sap.corp/devops-ci/corydoras-sample/)
+
+To understand how jobdsl works [have a look at the documentation](https://github.com/jenkinsci/job-dsl-plugin/wiki/Tutorial---Using-the-Jenkins-Job-DSL). You could also go see the [jobdsl api documentation](https://jenkinsci.github.io/job-dsl-plugin/)
 
 ## Known limitations
 

@@ -38,9 +38,13 @@ private scanRepo(String downStreamProjectName) {
     Jenkins.instance.getItemByFullName(downStreamProjectName).scheduleBuild()
 }
 
-def call(jenkinsContext) {
+def call(jenkinsContext, multibranch = false) {
     for (job in jobsToTrigger()) {
         jenkinsContext.println "build job ${job}"
-        scanRepo(job)
+        if (multibranch) {
+            scanRepo(job)
+        } else {
+            build job: job, propagate: false
+        }
     }
 }

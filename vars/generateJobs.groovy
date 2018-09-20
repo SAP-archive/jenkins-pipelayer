@@ -97,7 +97,9 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
                 if (!properties['jenkins.job.template']) {
                     throw new NoTemplateException()
                 }
-                findFiles(glob: properties['jenkins.job.template']).each { fileTemplate ->
+                def filesTemplate = findFiles(glob: properties['jenkins.job.template'])
+                def name = filesTemplate.size() > 1 ? null : properties['jenkins.job.name']
+                filesTemplate.each { fileTemplate ->
                     def fileContent = sh returnStdout: true, script: "cat ${fileTemplate.path}"
                     properties.each { key, value ->
                         fileContent = fileContent.replace(/{{${key}}}/, value)
@@ -107,7 +109,7 @@ gitConfigJenkinsBranch = commit.GIT_BRANCH
                     }
                     // note: we comment the first line in case a shebang is present
                     fileContent = infoMessage(localPath, fileTemplate.path, file.path) + insureNoShebang(fileContent)
-                    arrFiles << fileDescription(parser, config, fileContent, fileTemplate, properties['jenkins.job.name'], properties['jenkins.job.folder'], properties['jenkins.job.folder.description'])
+                    arrFiles << fileDescription(parser, config, fileContent, fileTemplate, name, properties['jenkins.job.folder'], properties['jenkins.job.folder.description'])
                 }
             } catch (NoTemplateException exception) {
                 println "You did not specify a template in $file.path, pass"
