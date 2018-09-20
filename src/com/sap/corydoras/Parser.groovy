@@ -95,9 +95,7 @@ class Parser {
      */
     def getDescription(content, filePath) {
         try {
-            def x = extractFirstComment(content).trim().replaceAll(/>\s*\n\s*/, '>\n').replaceAll(/(?<!>)\s*\n\s*/, '<br>\n')
-            println x
-            x
+            extractFirstComment(content).trim().replaceAll(/>\s*\n\s*/, '>\n').replaceAll(/(?<!>)\s*\n\s*/, '<br>\n')
         } catch (Exception ex) {
             println 'could not extract description for file ' + filePath
             println ex
