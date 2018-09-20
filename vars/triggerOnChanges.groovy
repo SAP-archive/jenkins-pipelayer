@@ -38,8 +38,11 @@ private scanRepo(String downStreamProjectName) {
     Jenkins.instance.getItemByFullName(downStreamProjectName).scheduleBuild()
 }
 
-def call(jenkinsContext, multibranch = false) {
+def call(jenkinsContext, folder = '', multibranch = false) {
     for (job in jobsToTrigger()) {
+        if (folder != '') {
+            job = "${folder}/${job}"
+        }
         jenkinsContext.println "build job ${job}"
         if (multibranch) {
             scanRepo(job)
