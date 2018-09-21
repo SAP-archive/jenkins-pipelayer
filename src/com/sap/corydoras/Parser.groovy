@@ -7,10 +7,18 @@
  */
 package com.sap.corydoras
 
+import com.sap.corydoras.Extractor
+
 /**
  * Class to look for properties from within pipeline files
  */
 class Parser {
+
+    Extractor extractor
+
+    Parser() {
+        extractor = new Extractor()
+    }
 
     /**
      * extract content of a block between brackets
@@ -21,38 +29,11 @@ class Parser {
     def extractBlock(name, content) {
         def extract = content.find(/(?msi)\s*?${name}\s*\{.*/)
         if (!extract) return
-
-        def firstPosition = extract.indexOf('{') + 1
-        def position = firstPosition
-        def openBracketCounter = 1
-        while (openBracketCounter) {
-            if (extract[position] == '{') {
-                openBracketCounter++
-            } else if (extract[position] == '}') {
-                openBracketCounter--
-            }
-            if (openBracketCounter == 0 || position == extract.size() - 1) break
-            position++
-        }
-        extract.substring(firstPosition, position)
+        extractor.extract(extract, '{', '}')
     }
 
     def extractFirstComment(extract) {
-        def firstPosition = extract.indexOf('/*') + 2
-        def position = firstPosition
-        def openBracketCounter = 1
-        def extractSize = extract.size()
-        while (openBracketCounter) {
-            if (extract[position] == '/' && position + 1 < extractSize && extract[position + 1] == '*') {
-                openBracketCounter++
-            } else if (extract[position - 1] == '*' && extract[position] == '/') {
-                openBracketCounter--
-                break
-            }
-            if (openBracketCounter == 0 || position == extract.size() - 1) break
-            position++
-        }
-        return (extractSize -1 == position || position == 0) ? '' : extract.substring(firstPosition, position - 1).trim()
+        extractor.extract(extract, '/*', '*/', false)
     }
     /**
      * extract within a text, a variable of the form //@variable
@@ -113,15 +94,28 @@ class Parser {
      */
     def getTriggers(content, filePath) {
         try {
-            def extract = extractBlock('triggers', content)
+           def extract = extractBlock('triggers', content)
             if (extract) {
                 println 'triggers found for file ' + filePath
                 extract = extract.replaceAll(/pollSCM\s*\(/, 'scm(')
-                    .replaceAll(/upstreamProjects\s*?:\s*?/, '')
-                    .replaceAll(/threshold\s*?:\s*?hudson\.model\.Result\./, '')
-                    .trim()
+                if (extract.indexOf('upstreamProjects') != -1) {
+                    def match = extract.substring(extract.indexOf('upstreamProjects'), extract.size() - 1)
+                    def jobs = extractor.extract(match, '\'', '\'', false).split(',')
+                    def statusArray = extract.findAll(/threshold\s*?:\s*?hudson\.model\.Result\.(\w+)/)
+                    if (statusArray.size() > 0) {
+                        def newExtract = ''
+                        def status = statusArray[0].replaceAll(/threshold\s*?:\s*?hudson\.model\.Result\./, '')
+                        jobs.each {
+                            newExtract += "upstream('${it}', '${status}')\n"
+                        }
+                        extract = extract
+                            .replaceAll(/upstream\(.*\n/, '')
+                        println extract
+                        extract += newExtract.replaceAll(/\n$/, '')
+                    }
+                }
             }
-            "return {\n${extract}\n}"
+            "return {\n${extract.trim()}\n}"
         } catch (Exception ex) {
             println 'could not extract triggers for file ' + filePath
             println ex

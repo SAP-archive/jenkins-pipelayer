@@ -36,6 +36,11 @@ pipeline {
             '''
         }
     }
+
+    triggers {
+        upstream(upstreamProjects: 'job1,job2', threshold: hudson.model.Result.SUCCESS)
+    }
+
     options {
         ansiColor('xterm')
         buildDiscarder(logRotator(numToKeepStr: '100', artifactNumToKeepStr: '20'))
