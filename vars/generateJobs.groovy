@@ -19,9 +19,16 @@ private insureNoShebang(fileContent) {
     if (fileContent.startsWith('#!')) {
         return "//${fileContent}"
     }
+    return ''
 }
 
-def fileDescription(parser, config, fileContent, file, propsName, propsFolder, propsFolderDescription) {
+@NonCPS
+private isJobDisabled(propsFolder, name) {
+    def existingJob = Jenkins.instance.getItemByFullName(propsFolder ? "${propsFolder}/${name}" : name)
+    return existingJob ? existingJob.disabled : false
+}
+
+private fileDescriptionName(paser, propsName, fileContent, file) {
     if (propsName) {
         name = propsName
     } else {
@@ -36,12 +43,16 @@ def fileDescription(parser, config, fileContent, file, propsName, propsFolder, p
             }
         }
     }
-    def existingJob = Jenkins.instance.getItemByFullName(propsFolder ? "${propsFolder}/${name}" : name)
+    return name
+}
+
+def fileDescription(parser, config, fileContent, file, propsName, propsFolder, propsFolderDescription) {
+    def name = fileDescriptionName(paser, propsName, fileContent, file)
     return [
         name: name,
         folder: propsFolder,
         folderDescription: propsFolderDescription,
-        isDisabled: existingJob ? existingJob.disabled : false,
+        isDisabled: isJobDisabled(propsFolder, name),
         content: config.withContent ?: (config.useTemplate ? fileContent : ''),
         path: file.path,
         displayName: parser.getDisplayName(fileContent),
