@@ -28,7 +28,7 @@ private isJobDisabled(propsFolder, name) {
     return existingJob ? existingJob.disabled : false
 }
 
-private fileDescriptionName(paser, propsName, fileContent, file) {
+private establishName(parser, propsName, fileContent, file) {
     if (propsName) {
         name = propsName
     } else {
@@ -47,7 +47,7 @@ private fileDescriptionName(paser, propsName, fileContent, file) {
 }
 
 def fileDescription(parser, config, fileContent, file, propsName, propsFolder, propsFolderDescription) {
-    def name = fileDescriptionName(paser, propsName, fileContent, file)
+    def establishName = fileDescriptionName(parser, propsName, fileContent, file)
     return [
         name: name,
         folder: propsFolder,
