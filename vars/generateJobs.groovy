@@ -47,7 +47,7 @@ private establishName(parser, propsName, fileContent, file) {
 }
 
 def fileDescription(parser, config, fileContent, file, propsName, propsFolder, propsFolderDescription) {
-    def establishName = fileDescriptionName(parser, propsName, fileContent, file)
+    def name = establishName(parser, propsName, fileContent, file)
     return [
         name: name,
         folder: propsFolder,
