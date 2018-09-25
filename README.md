@@ -2,6 +2,8 @@
 
 pipeline job generation made easy
 
+![logo](https://github.wdf.sap.corp/raw/devops-ci/corydoras/master/resources/logo-corydoras.png)
+
 ## Description
 
 This Jenkins Library introduces new ways to import jobs programmatically into jenkins:
