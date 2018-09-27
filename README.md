@@ -49,7 +49,7 @@ Usage:
 
 - **withContent**: specifies wether you want to use your files contents as groovy scripts for the jobs. If not set, groovy scripts will be fetched from GitHub when running the jobs. This parameter is useless if you use templates.
 
-- **copySrc**: specifies wheter you want to copy your project's files to Jenkins. If yes, files will be copied to `$JENKINS_HOME/job_resources/{{destination}}`
+- **copySrc**: specifies wheter you want to copy your project's files to Jenkins. If yes, files will be copied to `$JENKINS_HOME/job_resources/{{destination}}`. The full path to this destination can be retrieved in templates with `{{sources.directory}}`.
 
 - **localPath**: the process working directory. ie: your jobs are in a folder ./devops/config and you execute this step from within a ./devops/Jenkinsfile
 
