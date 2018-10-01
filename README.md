@@ -53,7 +53,26 @@ Usage:
 
 - **localPath**: the process working directory. ie: your jobs are in a folder ./devops/config and you execute this step from within a ./devops/Jenkinsfile
 
-**Note:** you will certainly have to approve the generated scripts in *Manage Jenkins -> In-process Script Approval*
+## Approve scripts
+
+You need to add step `approveScripts` to approve generated scripts when `useTemplate = true` parameter is used.
+You could also do it manually from page *Manage Jenkins -> In-process Script Approval* 
+
+`approveScripts` looks for all non approved scripts and methods and approve them.
+
+Use it like this:
+
+```
+    stage('approve') {
+        steps {
+            approveScripts 'jenkins_user', this
+        }
+    }
+```
+
+In this example, `jenkins_user` is a jenkins credential id from <https://<your_jenkins>/credentials/>
+The credential must be of type "username and password" and be a valid jenkins user.
+
 
 ## Template Engine
 
