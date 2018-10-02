@@ -30,7 +30,7 @@ for (ScriptApproval.PendingScript pending : sa.getPendingScripts()) {
         println ex
     }
 }
-println "Approved scripts: ${approvedScriptCount}"
+println "Approved scripts:" + approvedScriptCount
 
 // approve signatures
 for (ScriptApproval.PendingSignature pending : sa.getPendingSignatures()) {
@@ -41,7 +41,7 @@ for (ScriptApproval.PendingSignature pending : sa.getPendingSignatures()) {
         println ex
     }
 }
-println "Approved signatures: ${approvedSignatures}"
+println "Approved signatures: " + approvedSignatures
 return
     '''
     runRemoteScript(credentialId, scriptText, jenkinsContext)
