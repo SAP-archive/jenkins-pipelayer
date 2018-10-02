@@ -8,7 +8,8 @@ def runRemoteScript(credentialId, scriptText, jenkinsContext) {
             curl -k -u '${JENKINS_USER}':'${JENKINS_PASSWORD}' '${jenkinsUrl}crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
         """).trim()
         sh """
-            curl -k  --user '${JENKINS_USER}':'${JENKINS_PASSWORD}' -H "${CRUMB}" --data-urlencode "script=${scriptText}" ${jenkinsUrl}scriptText
+            curl -k  --user '${JENKINS_USER}':'${JENKINS_PASSWORD}' -H "${CRUMB}" --data-urlencode "script=${scriptText}" ${jenkinsUrl}scriptText > output.txt
+            cat output.txt
         """
     }
 }
