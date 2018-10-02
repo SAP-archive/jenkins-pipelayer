@@ -21,12 +21,20 @@ ScriptApproval sa = ScriptApproval.get()
 
 // approve scripts
 for (ScriptApproval.PendingScript pending : sa.getPendingScripts()) {
-    sa.approveScript(pending.getHash())
+    try {
+        sa.approveScript(pending.getHash())
+    } catch (Exception ex) {
+        println ex
+    }
 }
 
 // approve signatures
 for (ScriptApproval.PendingSignature pending : sa.getPendingSignatures()) {
-    sa.approveSignature(pending.signature)
+    try {
+        sa.approveSignature(pending.signature)
+    } catch (Exception ex) {
+        println ex
+    }
 }
     '''
     runRemoteScript(credentialId, scriptText, jenkinsContext)
