@@ -22,8 +22,9 @@ class RemoteExecute {
                 curl -k -u '${this.self.env.JENKINS_USER}':'${this.self.env.JENKINS_PASSWORD}' \
                 '${this.self.env.JENKINS_URL}crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
             """).trim()
-            def crumbTag = '-H "${CRUMB}" '
+            def crumbTag = "-H \"${CRUMB}\" "
             if (CRUMB.toLowerCase().indexOf('error') != -1) {
+                this.self.println "CRUMB error. CSRF might not be activated on your Jenkins: $CRUMB"
                 crumbTag = ''
             }
             scriptText = scriptText + """
