@@ -22,9 +22,9 @@ class RemoteExecute {
                 curl -k -u '${this.self.env.JENKINS_USER}':'${this.self.env.JENKINS_PASSWORD}' \
                 '${this.self.env.JENKINS_URL}crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
             """).trim()
-            def crumbTag = ''
-            if (CRUMB.toLowerCase().indexOf('error') == -1) {
-                crumbTag = '-H "${CRUMB}" '
+            def crumbTag = '-H "${CRUMB}" '
+            if (CRUMB.toLowerCase().indexOf('error') != -1) {
+                crumbTag = ''
             }
             scriptText = scriptText + """
 return
