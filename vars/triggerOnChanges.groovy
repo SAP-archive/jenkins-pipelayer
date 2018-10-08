@@ -1,5 +1,8 @@
 #!/usr/bin/env groovy
 
+/**
+ * List commited files that were added, deleted or modified since last commit
+ */
 private getChangedFiles() {
     output = sh returnStdout: true, script: '''#!/bin/bash
 changeSets=(`git diff-tree --no-commit-id --name-status -r HEAD`)
@@ -14,6 +17,10 @@ done
     output.replace('\r', '').split('\n')
 }
 
+/**
+ * List jobs that were generated with corydoras
+ * and had a `jenkins.job.template` property set to look for Jenkinsfile
+ */
 private jobsToTrigger() {
     changedFiles = getChangedFiles()
     arrFiles = []

@@ -15,6 +15,10 @@ private infoMessage(localPath, filePath, configPath) {
 """
 }
 
+/**
+ * Jenkins does not support scripts that start with a shebang.
+ * Remove it from fileContent if it exists
+ */
 private insureNoShebang(fileContent) {
     if (fileContent.startsWith('#!')) {
         return "//${fileContent}"
@@ -28,6 +32,12 @@ private isJobDisabled(propsFolder, name) {
     return existingJob ? existingJob.disabled : false
 }
 
+/**
+ * returns the name of a job, either it comes from:
+ * - property template `jenkins.job.name`
+ * - commented variable //@jobName=
+ * - fallback is either the name of the file, or for Jenkinsfile the name of the folder
+ */
 private establishName(parser, propsName, fileContent, file) {
     if (propsName) {
         name = propsName
@@ -46,6 +56,9 @@ private establishName(parser, propsName, fileContent, file) {
     return name
 }
 
+/**
+ * Format job description to be used by seed job
+ */
 def fileDescription(parser, config, fileContent, file, propsName, propsFolder, propsFolderDescription) {
     def name = establishName(parser, propsName, fileContent, file)
     return [
