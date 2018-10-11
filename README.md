@@ -46,21 +46,21 @@ Usage:
         gitRemoteUrl = 'git-uri'
     }
 ```
-- **gitConfigJenkinsBranch** [mandatory]: the branch on which the jobs are located
+- **gitConfigJenkinsBranch** [mandatory]: the branch on which the jobs are located.
 
-- **gitRemoteUrl** [mandatory]: the url to the repository is used to set the project url property of the job. This set Github link in jenkins menu to redirect to the repository
+- **gitRemoteUrl** [mandatory]: the url to the repository is used to set the project url property of the job. This set Github link in jenkins menu to redirect to the repository.
 
-- **path**: path to your files (either jobs or templates configuration files) [defaults: 'config/*.properties' for templates otherwise 'jobs/**/*.groovy']
+- **path**: path to your files (either jobs or templates configuration files) [defaults: 'config/*.properties' for templates otherwise 'jobs/**/*.groovy'].
 
-- **destination**: where to create the jobs. empty is at jenkins root, if not, will create a folder
+- **destination**: where to create the jobs. empty is at jenkins root, if not, will create a folder.
 
 - **useTemplate**: specifies wether you want to use templates. If so, it will process files in `config/*.properties` by default.
 
 - **withContent**: specifies wether you want to use your files contents as groovy scripts for the jobs. If not set, groovy scripts will be fetched from GitHub when running the jobs. This parameter is useless if you use templates.
 
-- **copySrc**: specifies wheter you want to copy your project's files to Jenkins. If yes, files will be copied to `$JENKINS_HOME/job_resources/{{destination}}`. The full path to this destination can be retrieved in templates with `{{sources.directory}}`. `useTemplate` option must be set to true
+- **copySrc**: specifies wheter you want to copy your project's files to Jenkins. If yes, files will be copied to `$JENKINS_HOME/job_resources/{{destination}}`. The full path to this destination can be retrieved in templates with `{{sources.directory}}`. `useTemplate` option must be set to true.
 
-- **localPath**: the process working directory. ie: your jobs are in a folder ./devops/config and you execute this step from within a ./devops/Jenkinsfile
+- **localPath**: the process working directory. ie: your jobs are in a folder ```./devops/config``` and you execute this step from within a ```./devops/Jenkinsfile```.
 
 ### Approve scripts
 
