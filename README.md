@@ -173,4 +173,5 @@ To understand how jobdsl works [have a look at the documentation](https://github
 
  - Pipeline keyword `jobDsl` is called, therefore you cannot cummulate multiple time the generation step within the same job
  - Don't execute these methods on a docker. A jenkins workspace must exist. This lib uses `writeFile` pipeline keyword
+ - There is a `jobDsl` limitation regarding the update of jobs. If the job is running at high frequency (every time a build stops, a new one starts) you might need to disable it in order to update it with jobdsl
 
