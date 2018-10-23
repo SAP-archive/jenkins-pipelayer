@@ -51,6 +51,11 @@ def call(jenkinsContext, folder = '', multibranch = false) {
             job = "${folder}/${job}"
         }
         jenkinsContext.println "build job ${job}"
-        scheduleBuild(job)
+        try {
+            scheduleBuild(job)
+        } catch(Exception e) {
+            println e
+            println "Exception on job ${job} (doesn't exist?)"
+        }
     }
 }
