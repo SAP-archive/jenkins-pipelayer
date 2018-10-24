@@ -5,7 +5,7 @@
  */
 private getChangedFiles() {
     output = sh returnStdout: true, script: '''#!/bin/bash
-changeSets=(`git diff-tree --no-commit-id --name-status -r HEAD`)
+changeSets=(`git diff-tree --no-commit-id --name-status -r HEAD HEAD^1`)
 for(( i=0; i<${#changeSets[@]}; i++))
 do
   if [[ "${changeSets[$i]}" =~ [ACDMRT] ]]
