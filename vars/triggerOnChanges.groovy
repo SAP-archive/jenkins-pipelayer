@@ -23,6 +23,8 @@ done
  */
 private jobsToTrigger() {
     changedFiles = getChangedFiles()
+    print 'changedFiles:'
+    print changedFiles.toString()
     arrFiles = []
     jobs = []
     findFiles(glob: '**/*/Jenkinsfile').each { file ->
@@ -37,6 +39,8 @@ private jobsToTrigger() {
             }
         }
     }
+    print 'arrFile'
+    print arrFiles.toString()
     arrFiles.unique()
 }
 
