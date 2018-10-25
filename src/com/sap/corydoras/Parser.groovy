@@ -262,8 +262,7 @@ class Parser {
             def parameters = []
             def extract = extractBlock('parameters', content)
             if (extract) {
-                println 'Parameters found for file ' + filePath
-				println "Extracted block: " + extract
+                println 'parameters found for file ' + filePath
                 if (extract.indexOf('}') != -1) {
                     extract = extract.substring(
                         extract.indexOf('{') + 1,
