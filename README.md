@@ -122,6 +122,9 @@ This syntax is inspired by the logic less template engine [mustache](https://mus
 example of template:
 
 ```
+/*
+    My Job Description
+*/
 pipeline {
     agent any
     parameters {
@@ -154,10 +157,20 @@ you can also set `jenkins.job.destination` to import the job with name `jenkins.
 
 `jenkins.job.template` also supports ant pattern to get multiple files.
 If there are multiple files, `jenkins.job.name` won't be used.
+
 An other method to set a job name is to write a comment as follow in the pipeline file:
 `//@jobName=my-generated-job`
+
 you can also act on the display name of the job with:
 `//@DisplayName=my cool name`
+
+Note: remember the comment `My Job Description` we wrote at the top of our pipeline? The description of the generated job in jenkins is set based on the first comment of the form
+
+```
+/*
+    <comment>
+*/
+```
 
 ## How it is made possible
 
