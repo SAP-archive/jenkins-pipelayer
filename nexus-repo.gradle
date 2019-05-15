@@ -1,0 +1,10 @@
+ext {
+    RepoConfigurator = {
+        mavenLocal()
+        maven { url 'http://nexus.wdf.sap.corp:8081/nexus/content/groups/build.releases/' }
+        maven { url 'http://nexus.wdf.sap.corp:8081/nexus/content/groups/build.milestones/' }
+        maven { url 'http://nexus.wdf.sap.corp:8081/nexus/content/groups/build.snapshots/' }
+        jcenter()
+        mavenCentral()
+    }
+}

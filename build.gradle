@@ -1,9 +1,17 @@
 #!groovy
 
+buildscript {
+    apply from: 'nexus-repo.gradle'
+    repositories RepoConfigurator
+    dependencies {
+        classpath "com.adarshr:gradle-test-logger-plugin:1.6.0"
+    }
+}
+
 plugins {
     id 'groovy'
     id 'codenarc'
-    id 'com.adarshr.test-logger' version '1.5.0'
+    id 'maven-publish'
 }
 
 description='''
@@ -30,13 +38,8 @@ sourceSets {
         }
     }
 }
-
-repositories {
-    mavenLocal()
-    maven { url 'http://nexus.wdf.sap.corp:8081/nexus/content/groups/build.milestones/' }
-    jcenter()
-    mavenCentral()
-}
+apply from: 'nexus-repo.gradle'
+repositories RepoConfigurator
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.13'
@@ -46,17 +49,29 @@ dependencies {
 }
 
 allprojects {
-    repositories {
-        maven { url 'http://nexus.wdf.sap.corp:8081/nexus/content/groups/build.milestones/' }
-        mavenCentral()
-        jcenter()
-    }
+    repositories RepoConfigurator
 }
 
+test {
+    systemProperty 'env', System.getProperty('env')
+}
+
+apply plugin: "com.adarshr.test-logger"
 testlogger {
     showStandardStreams true
     showPassed false
     showSummary false
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 task wrapper(type: Wrapper) {
