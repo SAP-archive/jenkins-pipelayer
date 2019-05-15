@@ -1,3 +1,7 @@
+/**
+ * @author Frederic Rousseau
+ *
+ */
 package com.sap.corydoras
 
 class Extractor {
@@ -15,15 +19,12 @@ class Extractor {
         def firstPosition = content.indexOf(opening) + openingSize
         if (opening == closing) {
             if (content.count(opening) > 1) {
-                def endIndex = returnAll
-                    ? content.lastIndexOf(opening)
-                    : content.indexOf(opening, firstPosition)
+                def endIndex = returnAll ? content.lastIndexOf(opening) : content.indexOf(opening, firstPosition)
                 return content.substring(firstPosition, endIndex)
             } else if (returnAll) {
                 return content
-            } else {
-                return ''
             }
+            return ''
         }
         def closingSize = closing.size()
         def contentSize = content.size()

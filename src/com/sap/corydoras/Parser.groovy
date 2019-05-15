@@ -7,8 +7,6 @@
  */
 package com.sap.corydoras
 
-import com.sap.corydoras.Extractor
-
 /**
  * Class to look for properties from within pipeline files
  */

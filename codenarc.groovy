@@ -234,7 +234,7 @@ ruleset {
     ExplicitStackInstantiation
     ExplicitTreeSetInstantiation
     //GStringAsMapKey
-    GStringExpressionWithinString
+    //GStringExpressionWithinString
     GetterMethodCouldBeProperty
     GroovyLangImmutable
     UseCollectMany

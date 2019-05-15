@@ -1,5 +1,4 @@
 #!/usr/bin/env groovy
-
 package com.sap.corydoras
 
 /**
@@ -27,12 +26,12 @@ class RemoteExecute {
                 this.self.println "CRUMB error. CSRF might not be activated on your Jenkins: $CRUMB"
                 crumbTag = ''
             }
-            scriptText = scriptText + """
+            returnScriptText = scriptText + '''
 return
-"""
+'''
             this.self.sh """
                 curl -kig -u '${this.self.env.JENKINS_USER}':'${this.self.env.JENKINS_PASSWORD}' \
-                ${crumbTag} --data-urlencode "script=${scriptText}" ${this.self.env.JENKINS_URL}scriptText
+                ${crumbTag} --data-urlencode "script=${returnScriptText}" ${this.self.env.JENKINS_URL}returnScriptText
             """
         }
     }

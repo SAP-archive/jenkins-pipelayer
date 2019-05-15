@@ -2,7 +2,7 @@ package com.sap.corydoras.jenkins
 
 class Changes {
 
-    def getChangedFiles() {
+    def changedFilesList() {
         output = sh returnStdout: true, script: '''#!/bin/bash
     changeSets=(`git diff-tree --no-commit-id --name-status -r HEAD`)
     for(( i=0; i<${#changeSets[@]}; i++))
@@ -17,7 +17,7 @@ class Changes {
     }
 
     def jobsToTrigger() {
-        changedFiles = getChangedFiles()
+        changedFiles = changedFilesList()
         arrFiles = []
         jobs = []
         findFiles(glob: '**/*/Jenkinsfile').each { file ->
