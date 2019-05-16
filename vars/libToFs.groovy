@@ -2,21 +2,15 @@
 
 import com.sap.corydoras.RemoteExecute
 
-def isValidSHA1(String s) {
-    s =~ /^[a-fA-F0-9]{40}$/
-}
 
-def extractBranch(uri) {
+def extractTreeish(uri) {
     def tag = '.git@'
     if (uri =~ /\${tag}/) {
-        def branchPos = uri.indexOf(tag) + tag.size()
-        def branch = uri.substring(branchPos)
-        if (isValidSHA1(s)) {
-            return branch
-        }
-        return 'origin/' + branch
+        def treeishPos = uri.indexOf(tag) + tag.size()
+        def treeish = uri.substring(treeishPos)
+        return treeish
     }
-    return 'origin/master'
+    return 'master'
 }
 
 def call(credentialId, jenkinsContext, libraries) {
@@ -24,26 +18,26 @@ def call(credentialId, jenkinsContext, libraries) {
     libraries.each {
         def libPath = "$JENKINS_HOME/shared_libraries/${it.getKey()}"
         def uri = it.getValue().replaceAll(/\.git@.*/, '.git')
-        def branch = extractBranch(it.getValue())
-        def branchNoPrefix = branch.replaceAll(/^origin\//, '')
+        def treeish = extractTreeish(it.getValue())
+        def treeishNoPrefix = treeish.replaceAll(/^origin\//, '')
 
         sh """
 if [ -d ${libPath} ]; then
     cd ${libPath}
     git fetch origin --prune
-    git reset --hard ${branch}
+    git reset --hard ${treeish}
 else
-    if echo "${branch}" | grep -q origin; then
-        git clone -b ${branchNoPrefix} --single-branch ${uri} ${libPath}
+    if echo "${treeish}" | grep -q origin; then
+        git clone -b ${treeishNoPrefix} --single-branch ${uri} ${libPath}
     else
         git clone ${uri} ${libPath}
-        git checkout ${branchNoPrefix}
+        git checkout ${treeishNoPrefix}
     fi
 fi
 """
 
         scriptText += """
-createIfMissing('${it.getKey()}', 'file://${libPath}', '${branchNoPrefix}')
+createIfMissing('${it.getKey()}', 'file://${libPath}', '${treeishNoPrefix}')
 """
     }
     new RemoteExecute(jenkinsContext, credentialId).runScript(scriptText)
