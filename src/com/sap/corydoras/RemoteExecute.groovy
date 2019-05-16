@@ -31,7 +31,7 @@ return
 '''
             this.self.sh """
                 curl -kig -u '${this.self.env.JENKINS_USER}':'${this.self.env.JENKINS_PASSWORD}' \
-                ${crumbTag} --data-urlencode "script=${returnScriptText}" ${this.self.env.JENKINS_URL}returnScriptText
+                ${crumbTag} --data-urlencode "script=${returnScriptText}" ${this.self.env.JENKINS_URL}scriptText
             """
         }
     }
