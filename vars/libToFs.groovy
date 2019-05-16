@@ -31,6 +31,7 @@ else
         git clone -b ${treeishNoPrefix} --single-branch ${uri} ${libPath}
     else
         git clone ${uri} ${libPath}
+        git fetch --all
         git checkout ${treeishNoPrefix}
     fi
 fi
