@@ -24,7 +24,7 @@ def call(credentialId, jenkinsContext, libraries) {
         sh """
 if [ -d ${libPath} ]; then
     cd ${libPath}
-    git fetch --all --prune
+    git fetch --all
     git reset --hard ${treeish}
 else
     if echo "${treeish}" | grep -q origin; then
