@@ -26,7 +26,7 @@ class RemoteExecute {
                 this.self.println "CRUMB error. CSRF might not be activated on your Jenkins: $CRUMB"
                 crumbTag = ''
             }
-            returnScriptText = scriptText + '''
+            def returnScriptText = scriptText + '''
 return
 '''
             this.self.sh """
