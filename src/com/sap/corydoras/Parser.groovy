@@ -331,6 +331,8 @@ class Parser {
                         choices = val
                     }
                     textScript += "${p.type}(${p.name}, [${choices}], ${p.description})\n"
+                } else if (p.type == 'file') {
+                    textScript += "fileParam(${p.name}, ${p.description})\n"
                 } else if (p.type == 'nonStoredPasswordParam') {
                     textScript += "${p.type}(${p.name}, ${p.description})\n"
                 } else {
