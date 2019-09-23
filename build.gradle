@@ -15,7 +15,7 @@ plugins {
 }
 
 description='''
-Pipeline job generation made easy
+Jenkins-Pipelayer - Pipeline job generation made easy
 '''
 group 'com.sap.devops'
 version '1.0.0'
