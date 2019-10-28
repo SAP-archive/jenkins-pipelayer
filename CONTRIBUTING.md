@@ -33,7 +33,7 @@ When you contribute code, documentation, or anything else, you have to be aware 
 
 1. If you introduce a new functionnality that can be unit tested, add a [spock unit tests](http://spockframework.org/spock/docs/1.3/spock_primer.html#_expect_blocks).
 1. Create a pull request
-1. [travis](https://travis-ci.com/SAP/jenkins-pipelayer/builds/) will approve your PR if build, [lint](https://github.com/SAP/jenkins-pipelayer/blob/master/codenarc.groovy) and tests pass
+1. [Travis](https://travis-ci.com/SAP/jenkins-pipelayer/builds/) will approve your PR if build, [lint](https://github.com/SAP/jenkins-pipelayer/blob/master/codenarc.groovy) and tests pass
 1. Wait for our code review and approval, possibly enhancing your change on request
 1. Once the change has been approved and merged, we will inform you in a comment.
 1. Celebrate!
