@@ -20,9 +20,13 @@ This Jenkins Library introduces :
 
 ## Usage
 
-Have a look at `USAGE.md` for a description of the steps introduced by Jenkins Pipelayer.
-We made samples to help you understand how to use the library. Please check out the `sample` folder
+Have a look at [USAGE.md](https://github.com/SAP/jenkins-pipelayer/blob/master/USAGE.md) for a description of the steps introduced by Jenkins Pipelayer.
+We made samples to help you understand how to use the library. Please check out the [sample](https://github.com/SAP/jenkins-pipelayer/tree/master/sample) folder
 
 ## Contribute
 
-Your code must pass the linter. Write a unit test if you can. Please test your code
+Please check our [Contribution Guidelines](https://github.com/SAP/jenkins-pipelayer/blob/master/CONTRIBUTING.md).
+
+## License
+
+Copyright (c) 2019 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, Version 2.0 except as noted otherwise in the [LICENSE](https://github.com/SAP/jenkins-pipelayer/blob/master/LICENSE) file.
