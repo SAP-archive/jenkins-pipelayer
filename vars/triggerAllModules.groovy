@@ -2,7 +2,7 @@
 
 
 /**
- * List jobs that were generated with corydoras
+ * List jobs that were generated
  * and had a `jenkins.job.template` property set to look for Jenkinsfile
  */
 private jobsToTrigger() {

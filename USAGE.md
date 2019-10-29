@@ -37,7 +37,7 @@ Usage:
 
 - **gitRemoteUrl** [mandatory]: the url to the repository is used to set the project url property of the job. This set Github link in jenkins menu to redirect to the repository.
 
-- **path**: path to your files (either jobs or templates configuration files) [defaults: 'config/*.properties' for templates otherwise 'jobs/**/*.groovy'].
+- **path**: path to your files (either jobs or templates configuration files) [defaults: 'config/\*.properties' for templates otherwise 'jobs/\*\*/\*.groovy'].
 
 - **destination**: where to create the jobs. empty is at jenkins root, if not, will create a folder.
 
@@ -170,6 +170,7 @@ To understand how jobdsl works [have a look at the documentation](https://github
 ## Known limitations
 
  - Pipeline keyword `jobDsl` is called, therefore you cannot cummulate multiple time the generation step within the same job
+   For instance, if you call `generateMultiPipeline` before `generateJobs`, only jobs generated with `generateJobs` will remain
  - Don't execute these methods on a docker. A jenkins workspace must exist. This lib uses `writeFile` pipeline keyword
  - There is a `jobDsl` limitation regarding the update of jobs. If the job is running at high frequency (every time a build stops, a new one starts) you might need to disable it in order to update it with jobdsl
  - When adding a multi-choice parameter to a properties file for a pipeline, be sure to DOUBLE escape the \n:

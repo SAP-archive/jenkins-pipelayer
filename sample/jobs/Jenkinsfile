@@ -1,23 +1,28 @@
 #!/usr/bin/env groovy
 
-@Library('corydoras-lib')_
+@Library('jenkins-pipelayer')_
 
 pipeline {
     agent any
     options {
         buildDiscarder(logRotator(numToKeepStr: '100'))
         timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
     }
     stages {
         stage('Generate Jobs') {
             steps {
-                lock(resource: "${env.JOB_NAME}/10", inversePrecedence: true) {
-                    milestone 10
-                    script {
-                        commit = checkout scm
-                    }
-                    // this will generate jobs from folder jobs to jenkins folder pipelines
-                    generateJobs 'jobs/**/*.groovy', 'pipelines', commit
+                checkout scm
+                // this will generate jobs from folder jobs to jenkins folder pipelines
+                generateJobs {
+                    // the path were to look for property files
+                    path = 'jobs/**/*.groovy'
+                    // a link to your git repository
+                    gitRemoteUrl = 'https://a-link-to-your-repository'
+                    // the name of the branch your jobs are on.
+                    gitConfigJenkinsBranch = 'master'
+                    // a folder on jenkins to put your jobs in. (it will be created)
+                    destination = 'pipelines'
                 }
             }
         }

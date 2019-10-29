@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-@Library('corydoras-lib')_
+@Library('jenkins-pipelayer')_
 
 pipeline {
     agent any
@@ -11,14 +11,29 @@ pipeline {
     stages {
         stage('Generate Jobs') {
             steps {
+                // here we used Lockable Resources plugin instead of disableConcurrentBuilds() for demo purpose 
                 lock(resource: "${env.JOB_NAME}/10", inversePrecedence: true) {
+                    checkout scm
                     milestone 10
-                    script {
-                        commit = checkout scm
+                    // look for *.property files and generate jobs from them 
+                    generateJobs {
+                        // the path were to look for property files
+                        path = 'config/*'
+                        // a link to your git repository
+                        gitRemoteUrl = 'https://a-link-to-your-repository'
+                        // the name of the branch your jobs are on.
+                        gitConfigJenkinsBranch = 'master'
+                        // this option is mandatory, if you don't check it, the step will look not for peroperty files but for pipelines in folder specified by 'path'
+                        useTemplate = true
                     }
-                    // look for config/*.property files and generate jobs from them 
-                    processTemplates null, commit
                 }
+            }
+        }
+        // this stage will approve automatically the jobs generated
+        stage('approve') {
+            steps {
+                // put a valid credential id here
+                approveScripts 'jenkins_user', this
             }
         }
     }

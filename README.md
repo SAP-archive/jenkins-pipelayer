@@ -20,12 +20,40 @@ This Jenkins Library introduces :
 
 ## Usage
 
-Have a look at [USAGE.md](https://github.com/SAP/jenkins-pipelayer/blob/master/USAGE.md) for a description of the steps introduced by Jenkins Pipelayer.
+### Import the library to Jenkins
+
+From the __Configure System__ administration page, add the library <https://github.com/SAP/jenkins-pipelayer.git>, name it 
+`jenkins-pipelayer` for convenience
+
+Have a look at [USAGE.md](https://github.com/SAP/jenkins-pipelayer/blob/master/USAGE.md#requirements) for a detailed procedure of the import.
+
+### Import the library in a Jenkins job
+
+```groovy
+@Library('jenkins-pipelayer')_
+```
+
+### Use the library
+
+The library adds the folowing steps to Jenkins pipeline dsl:
+
+- [__generateJobs__](https://github.com/SAP/jenkins-pipelayer/blob/master/USAGE.md#generate-jobs) => Parse pipeline dsl, translate it to jobdsl and create a jenkins job
+- [__approveScripts__](https://github.com/SAP/jenkins-pipelayer/blob/master/USAGE.md#approve-scripts) => this step approves jobs generated from templates on jenkins
+- [__libToFs__](https://github.com/SAP/jenkins-pipelayer/blob/master/USAGE.md#host-shared-library-on-filesystem) => particularly useful to reduce the number of queries to github
+
+Have a look at [USAGE.md](https://github.com/SAP/jenkins-pipelayer/blob/master/USAGE.md) for a description of the steps introduced by Jenkins Pipelayer and a better explanation of the [template engine](https://github.com/SAP/jenkins-pipelayer/blob/master/USAGE.md#template-engine).
+
 We made samples to help you understand how to use the library. Please check out the [sample](https://github.com/SAP/jenkins-pipelayer/tree/master/sample) folder
 
 ## Contribute
 
-Please check our [Contribution Guidelines](https://github.com/SAP/jenkins-pipelayer/blob/master/CONTRIBUTING.md).
+Install the [requirements](https://github.com/SAP/jenkins-pipelayer/blob/master/USAGE.md#requirements). Run lint and tests with command:
+
+```
+gradlew codenarcMain test
+```
+
+Have a look at our [Contribution Guidelines](https://github.com/SAP/jenkins-pipelayer/blob/master/CONTRIBUTING.md), there is more info there.
 
 ## License
 
